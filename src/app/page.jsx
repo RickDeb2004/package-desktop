@@ -8,8 +8,14 @@ import { CardHeader, CardContent, Card } from "@/components/ui/card";
 export default function Component() {
   const [showAdminPortal, setShowAdminPortal] = useState(false);
 
+  
+
   const handleAddArticleClick = () => {
     setShowAdminPortal(true);
+  };
+
+  const handleBackButtonClick = () => {
+    setShowAdminPortal(false); // Reset to initial state
   };
 
   return (
@@ -75,6 +81,7 @@ export default function Component() {
               <Input id="admin-article-id" placeholder="Enter the article ID" />
             </div>
             <Button className="justify-center w-full">Add Article</Button>
+            <Button onClick={handleBackButtonClick} className="justify-center w-full">Back</Button>
           </div>
         </div>
       )}
