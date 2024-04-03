@@ -6,15 +6,20 @@ import { Button } from "@/components/ui/button";
 import { CardHeader, CardContent, Card } from "@/components/ui/card";
 import { app } from "../firebase";
 import { getDatabase, ref, push } from "firebase/database";
+
+import News from "@/components/component/News";
+
 import {
   getStorage,
   ref as storageRef,
   uploadBytes,
   getDownloadURL,
 } from "firebase/storage";
+
 import { AuthContext } from "../helper/authProvider";
 import UserMenu from "@/components/component/UserMenu";
 import { GoogleAuthProvider, signInWithPopup, getAuth } from "firebase/auth";
+
 export default function Component() {
   const [showAdminPortal, setShowAdminPortal] = useState(false);
   const [adminArticle, setAdminArticle] = useState({
@@ -249,6 +254,7 @@ export default function Component() {
           </div>
         </div>
       )}
+      <News />
     </div>
   );
 }
