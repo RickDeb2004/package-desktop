@@ -4,18 +4,70 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { CardHeader, CardContent, Card } from "@/components/ui/card";
-
+import { app } from "../firebase";
+import { getDatabase, ref, push } from "firebase/database";
 export default function Component() {
   const [showAdminPortal, setShowAdminPortal] = useState(false);
-
+  const [adminArticle, setAdminArticle] = useState({
+    date: "",
+    heading: "",
+    publisher: "",
+    articleId: "",
+    file: "",
+  });
+  const handleInputChange = (e) => {
+    const { id, value } = e.target;
+    setAdminArticle((prev) => {
+      return {
+        ...prev,
+        [id]: value,
+      };
+    });
+  };
+  const handleHeadingChange = (e) => {
+    const value = e.target.value;
+    setAdminArticle((prev) => ({
+      ...prev,
+      heading: value,
+    }));
+  };
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    setAdminArticle((prev) => ({
+      ...prev,
+      file,
+    }));
+  };
   const handleAddArticleClick = () => {
+    const database = getDatabase(app);
     setShowAdminPortal(true);
+    push(ref(database, "articles"), adminArticle);
   };
 
   const handleBackButtonClick = () => {
     setShowAdminPortal(false); // Reset to initial state
   };
-
+  const handleDateChange = (e) => {
+    const value = e.target.value;
+    setAdminArticle((prev) => ({
+      ...prev,
+      date: value,
+    }));
+  };
+  const handlePublisherChange = (e) => {
+    const value = e.target.value;
+    setAdminArticle((prev) => ({
+      ...prev,
+      publisher: value,
+    }));
+  };
+  const handleArticleIdChange = (e) => {
+    const value = e.target.value;
+    setAdminArticle((prev) => ({
+      ...prev,
+      articleId: value,
+    }));
+  };
   const handleLoginClick = () => {};
   return (
     <div className=" relative grid min-h-screen items-center justify-center gap-6 px-6 lg:grid-cols-2 xl:gap-0 border border-yellow-500">
@@ -68,25 +120,56 @@ export default function Component() {
             </h2>
             <div className="space-y-2">
               <Label htmlFor="admin-date">Date</Label>
-              <Input id="admin-date" required type="date" />
+              <Input
+                id="admin-date"
+                value={adminArticle.date}
+                onChange={handleDateChange}
+                required
+                type="date"
+              />
             </div>
             <div className="space-y-2">
               <Label htmlFor="admin-heading">Heading</Label>
-              <Input id="admin-heading" placeholder="Enter the heading" />
+              <Input
+                id="admin-heading"
+                value={adminArticle.heading}
+                onChange={handleHeadingChange}
+                placeholder="Enter the heading"
+              />
             </div>
             <div className="space-y-2">
               <Label htmlFor="admin-publisher">Publisher</Label>
-              <Input id="admin-publisher" placeholder="Enter the publisher" />
+              <Input
+                id="admin-publisher"
+                value={adminArticle.publisher}
+                onChange={handlePublisherChange}
+                placeholder="Enter the publisher"
+              />
             </div>
             <div className="space-y-2">
               <Label htmlFor="admin-article-id">Article ID</Label>
-              <Input id="admin-article-id" placeholder="Enter the article ID" />
+              <Input
+                id="admin-article-id"
+                value={adminArticle.articleId}
+                onChange={handleArticleIdChange}
+                placeholder="Enter the article ID"
+              />
             </div>
             <div className="space-y-2">
               <Label htmlFor="admin-file-upload">Upload File</Label>
-              <Input id="admin-file-upload" type="file" />
+              <Input
+                id="admin-file-upload"
+                value={adminArticle.file}
+                onChange={handleFileChange}
+                type="file"
+              />
             </div>
-            <Button className="justify-center w-full">Add Article</Button>
+            <Button
+              className="justify-center w-full"
+              onClick={handleAddArticleClick}
+            >
+              Add Article
+            </Button>
             <Button
               onClick={handleBackButtonClick}
               className="justify-center w-full"

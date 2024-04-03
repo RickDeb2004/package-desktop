@@ -14,9 +14,8 @@ const firebaseConfig = {
   storageBucket: "package-dekstop.appspot.com",
   messagingSenderId: "313409620631",
   appId: "1:313409620631:web:dc32e6863aefe64c20b7d2",
-  measurementId: "G-SFS57HKY7V"
+  measurementId: "G-SFS57HKY7V",
 };
 
 // Initialize Firebase
-const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
+export const app = initializeApp(firebaseConfig);
