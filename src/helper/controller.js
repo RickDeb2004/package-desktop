@@ -1,7 +1,7 @@
 import { getDatabase, ref, push, onValue } from "firebase/database";
-import { firebaseApp } from "../firebase";
+import { app } from "../firebase";
 
-const db = getDatabase(firebaseApp);
+const db = getDatabase(app);
 
 export const getArticles = (callback) => {
   onValue(ref(db, "articles"), (snapshot) => {
