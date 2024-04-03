@@ -82,6 +82,10 @@ export default function Component() {
               <Label htmlFor="admin-article-id">Article ID</Label>
               <Input id="admin-article-id" placeholder="Enter the article ID" />
             </div>
+            <div className="space-y-2">
+              <Label htmlFor="admin-file-upload">Upload File</Label>
+              <Input id="admin-file-upload" type="file" />
+            </div>
             <Button className="justify-center w-full">Add Article</Button>
             <Button
               onClick={handleBackButtonClick}
