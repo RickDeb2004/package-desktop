@@ -215,7 +215,7 @@ export default function Component() {
               className="justify-center w-full"
               onClick={handleAddArticleClick}
             >
-              Add Article
+              Add
             </Button>
             <Button
               onClick={handleBackButtonClick}
