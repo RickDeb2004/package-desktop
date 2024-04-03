@@ -6,7 +6,16 @@ import { Button } from "@/components/ui/button";
 import { CardHeader, CardContent, Card } from "@/components/ui/card";
 import { app } from "../firebase";
 import { getDatabase, ref, push } from "firebase/database";
+
 import News from "@/components/component/News";
+
+import {
+  getStorage,
+  ref as storageRef,
+  uploadBytes,
+  getDownloadURL,
+} from "firebase/storage";
+
 export default function Component() {
   const [showAdminPortal, setShowAdminPortal] = useState(false);
   const [adminArticle, setAdminArticle] = useState({
@@ -16,6 +25,19 @@ export default function Component() {
     articleId: "",
     file: "",
   });
+  const uploadFile = async (file, folderName) => {
+    const storage = getStorage(app);
+    const storageReference = storageRef(storage, `${folderName}/${file.name}`);
+    try {
+      await uploadBytes(storageReference, file);
+      const downloadURL = await getDownloadURL(storageReference);
+      return downloadURL;
+    } catch (error) {
+      console.error("Error uploading file:", error);
+      return null;
+    }
+  };
+
   const handleInputChange = (e) => {
     const { id, value } = e.target;
     setAdminArticle((prev) => {
@@ -32,19 +54,51 @@ export default function Component() {
       heading: value,
     }));
   };
-  const handleFileChange = (e) => {
+  // const handleFileChange = (e) => {
+  //   const file = e.target.files[0];
+  //   const allowedTypes = ["image/jpeg", "image/png", "application/pdf"]; // Define allowed file types
+  //   if (file && allowedTypes.includes(file.type)) {
+  //     setAdminArticle((prev) => ({
+  //       ...prev,
+  //       file: file,
+  //     }));
+  //   } else {
+  //     e.target.value = null; // Reset the file input
+  //     alert("Please select a valid file type (jpg, png, or pdf).");
+  //   }
+  // };
+  const handleFileChange = async (e) => {
     const file = e.target.files[0];
-    setAdminArticle((prev) => ({
-      ...prev,
-      file,
-    }));
+    if (!file) return;
+
+    let folderName = "";
+    if (file.type.includes("image")) {
+      folderName = "images";
+    } else if (file.type.includes("pdf")) {
+      folderName = "documents";
+    } else {
+      alert("Unsupported file type. Please upload an image or PDF file.");
+      return;
+    }
+
+    const fileURL = await uploadFile(file, folderName);
+    if (fileURL) {
+      setAdminArticle((prev) => ({
+        ...prev,
+        file: fileURL,
+      }));
+    } else {
+      alert("File upload failed. Please try again.");
+    }
   };
   const handleAddArticleClick = () => {
     const database = getDatabase(app);
-    setShowAdminPortal(true);
+
     push(ref(database, "articles"), adminArticle);
   };
-
+  const handleClickAdd = () => {
+    setShowAdminPortal(true);
+  };
   const handleBackButtonClick = () => {
     setShowAdminPortal(false); // Reset to initial state
   };
@@ -104,10 +158,7 @@ export default function Component() {
               <Input id="article-id" placeholder="Enter the article ID" />
             </div>
             <Button className="justify-center w-full">Search</Button>
-            <Button
-              onClick={handleAddArticleClick}
-              className="justify-center w-full"
-            >
+            <Button onClick={handleClickAdd} className="justify-center w-full">
               Add Article
             </Button>
           </>
@@ -160,7 +211,6 @@ export default function Component() {
               <Label htmlFor="admin-file-upload">Upload File</Label>
               <Input
                 id="admin-file-upload"
-                value={adminArticle.file}
                 onChange={handleFileChange}
                 type="file"
               />
@@ -169,7 +219,7 @@ export default function Component() {
               className="justify-center w-full"
               onClick={handleAddArticleClick}
             >
-              Add Article
+              Add
             </Button>
             <Button
               onClick={handleBackButtonClick}
