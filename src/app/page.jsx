@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { CardHeader, CardContent, Card } from "@/components/ui/card";
 import { app } from "../firebase";
 import { getDatabase, ref, push } from "firebase/database";
+import News from "@/components/component/News";
 export default function Component() {
   const [showAdminPortal, setShowAdminPortal] = useState(false);
   const [adminArticle, setAdminArticle] = useState({
@@ -179,6 +180,7 @@ export default function Component() {
           </div>
         </div>
       )}
+      <News />
     </div>
   );
 }
