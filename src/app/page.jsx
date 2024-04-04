@@ -58,32 +58,8 @@ export default function Component() {
       return null;
     }
   };
-  // const handleSesarch=async ()=>{
-  //   const articlesRef = ref(db, "articles");
-  //   let filteredQuery=articlesRef;
-  //    // Apply search criteria
-  //    if (searchCriteria.date) {
-  //     filteredQuery = query(filteredQuery, orderByChild("date"), equalTo(searchCriteria.date));
-  //   }
-  //   if (searchCriteria.heading) {
-  //     filteredQuery = query(filteredQuery, orderByChild("heading"), equalTo(searchCriteria.heading));
-  //   }
-  //   if (searchCriteria.publisher) {
-  //     filteredQuery = query(filteredQuery, orderByChild("publisher"), equalTo(searchCriteria.publisher));
-  //   }
-  //   if (searchCriteria.articleId) {
-  //     filteredQuery = query(filteredQuery, orderByChild("articleId"), equalTo(searchCriteria.articleId));
-  //   }
 
-  //   // Fetch the filtered articles
-  //   const snapshot = await get(filteredQuery);
-  //   const articles = [];
-  //   snapshot.forEach((childSnapshot) => {
-  //     articles.push(childSnapshot.val());
-  //   });
-  //   setSearchResults(articles);
-
-  // };
+  //
   const handleSearch = async () => {
     const articlesRef = ref(db, "articles");
     let filteredQuery = articlesRef;
@@ -97,11 +73,21 @@ export default function Component() {
       );
     }
     if (searchCriteria.heading) {
-      filteredQuery = query(
-        filteredQuery,
-        orderByChild("heading"),
-        equalTo(searchCriteria.heading)
-      );
+      // Convert the searchCriteria.heading to lowercase for case-insensitive search
+      const searchTerm = searchCriteria.heading.toLowerCase();
+      // Firebase Realtime Database doesn't support native full-text search
+      // So, you need to fetch all articles and then filter them in JavaScript
+      const snapshot = await get(filteredQuery);
+      const articles = [];
+      snapshot.forEach((childSnapshot) => {
+        const article = childSnapshot.val();
+        // Perform partial match search for heading
+        if (article.heading.toLowerCase().includes(searchTerm)) {
+          articles.push(article);
+        }
+      });
+      setSearchResults(articles);
+      return; // Exit the function early to prevent further execution
     }
     if (searchCriteria.publisher) {
       filteredQuery = query(
@@ -277,7 +263,7 @@ export default function Component() {
         </div>
       )}
       {/* Display Search Results */}
-      {searchResults.length > 0 && (
+      {/* {searchResults.length > 0 && (
         <div className="space-y-4">
           <h2 className="text-2xl font-semibold">Search Results</h2>
           {searchResults.map((article, index) => (
@@ -285,6 +271,31 @@ export default function Component() {
               <CardHeader>{article.heading}</CardHeader>
               <CardContent>
                 <News />
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      )} */}
+      {searchResults.length > 0 && (
+        <div className="space-y-4">
+          <h2 className="text-2xl font-semibold">Search Results</h2>
+          {searchResults.map((article, index) => (
+            <Card key={index}>
+              <CardHeader>{article.heading}</CardHeader>
+              <CardContent>
+                <p>Date: {article.date}</p>
+                <p>Publisher: {article.publisher}</p>
+                <p>Article ID: {article.articleId}</p>
+                {/* Render file if available */}
+                {article.file && (
+                  <a
+                    href={article.file}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    View File
+                  </a>
+                )}
               </CardContent>
             </Card>
           ))}
