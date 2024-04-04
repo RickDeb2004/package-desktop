@@ -1,6 +1,7 @@
 "use client";
 import React, { createContext, useEffect, useState } from 'react';
 import { getAuth } from 'firebase/auth';
+import { app } from '../firebase';
 
 export const AuthContext = createContext();
 
@@ -8,7 +9,7 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState({});
   const [isLoading, setIsLoading] = useState(true);
 
-  const auth = getAuth();
+  const auth = getAuth(app);
 
   useEffect(() => {
     const unsubscribed = auth.onIdTokenChanged((user) => {
