@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -16,6 +16,10 @@ import {
   getDownloadURL,
 } from "firebase/storage";
 
+import { AuthContext } from "../helper/authProvider";
+import UserMenu from "@/components/component/UserMenu";
+import { GoogleAuthProvider, signInWithPopup, getAuth } from "firebase/auth";
+
 export default function Component() {
   const [showAdminPortal, setShowAdminPortal] = useState(false);
   const [adminArticle, setAdminArticle] = useState({
@@ -25,6 +29,11 @@ export default function Component() {
     articleId: "",
     file: "",
   });
+
+  const { user } = useContext(AuthContext);
+  const auth = getAuth(app);
+
+
   const uploadFile = async (file, folderName) => {
     const storage = getStorage(app);
     const storageReference = storageRef(storage, `${folderName}/${file.name}`);
@@ -123,11 +132,26 @@ export default function Component() {
       articleId: value,
     }));
   };
-  const handleLoginClick = () => {};
+  const handleLoginClick = async () => {
+    const provider = new GoogleAuthProvider();
+    try {
+      const res = await signInWithPopup(auth, provider);
+    } catch (error) {
+      if (error.code === "auth/cancelled-popup-request") {
+        console.log("Popup authentication was cancelled by the user.");
+      } else {
+        console.error("Error signing in with Google:", error);
+      }
+    }
+  };
   return (
     <div className=" relative grid min-h-screen items-center justify-center gap-6 px-6 lg:grid-cols-2 xl:gap-0 border border-yellow-500">
       <div className="absolute top-0 right-0 mt-4 mr-4">
+       {Object.keys(user).length === 0 ? (
         <Button onClick={handleLoginClick}>Login</Button>
+      ) : (
+        <UserMenu />
+      )}
       </div>
       {!showAdminPortal && (
         <div className="space-y-4 border border-red-500">
