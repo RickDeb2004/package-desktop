@@ -16,6 +16,7 @@ export default function News() {
             <h1>{article.heading}</h1>
             <p>{article.publisher}</p>
             <p>{article.date}</p>
+            <p>{article.file}</p>
             </div>
         ))}
         This is the news component

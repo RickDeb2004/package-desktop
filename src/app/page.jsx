@@ -162,6 +162,7 @@ export default function Component() {
               Add Article
             </Button>
           </>
+          <News />
         </div>
       )}
       {showAdminPortal && (
@@ -230,7 +231,7 @@ export default function Component() {
           </div>
         </div>
       )}
-      <News />
+    
     </div>
   );
 }
