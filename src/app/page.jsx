@@ -32,14 +32,23 @@ export default function Component() {
     publisher: "",
     articleId: "",
     file: "",
+    category: "",
   });
   const [searchCriteria, setSearchCriteria] = useState({
     date: "",
     heading: "",
     publisher: "",
     articleId: "",
+    criteria: "",
   });
   const [searchResults, setSearchResults] = useState([]);
+  const [categoryOptions, setCategoryOptions] = useState([
+    "World News",
+    "Accident",
+    "Love",
+    // Add more categories here
+  ]);
+  const [newCategory, setNewCategory] = useState("");
   const db = getDatabase(app);
   useEffect(() => {
     if (showAdminPortal) {
@@ -103,7 +112,13 @@ export default function Component() {
         equalTo(searchCriteria.articleId)
       );
     }
-
+    if (searchCriteria.category) {
+      filteredQuery = query(
+        filteredQuery,
+        orderByChild("category"),
+        equalTo(searchCriteria.category)
+      );
+    }
     // Fetch the filtered articles
     const snapshot = await get(filteredQuery);
     const articles = [];
@@ -198,6 +213,32 @@ export default function Component() {
       articleId: value,
     }));
   };
+  const handleCategoryChange = (e) => {
+    const value = e.target.value;
+    setAdminArticle((prev) => ({
+      ...prev,
+      category: value,
+    }));
+    setSearchCriteria((prev) => ({
+      ...prev,
+      category: value,
+    }));
+  };
+  const handleNewCategoryChange = (e) => {
+    const value = e.target.value;
+    setNewCategory(value);
+  };
+
+  const handleAddNewCategory = () => {
+    if (newCategory.trim() !== "") {
+      setCategoryOptions((prevOptions) => [...prevOptions, newCategory]);
+      setAdminArticle((prev) => ({
+        ...prev,
+        category: newCategory,
+      }));
+      setNewCategory("");
+    }
+  };
   const handleLoginClick = () => {};
   return (
     <div className=" relative grid min-h-screen items-center justify-center gap-6 px-6 lg:grid-cols-2 xl:gap-0 border border-yellow-500">
@@ -253,6 +294,22 @@ export default function Component() {
                 placeholder="Enter the article ID"
               />
             </div>
+            <div className="space-y-2">
+              <Label htmlFor="category">Category</Label>
+              <select
+                id="category"
+                onChange={handleInputChange}
+                value={searchCriteria.category}
+                className="text-black"
+              >
+                <option value="">Select category</option>
+                {categoryOptions.map((category, index) => (
+                  <option key={index} value={category} className="text-black">
+                    {category}
+                  </option>
+                ))}
+              </select>
+            </div>
             <Button className="justify-center w-full" onClick={handleSearch}>
               Search
             </Button>
@@ -286,6 +343,7 @@ export default function Component() {
                 <p>Date: {article.date}</p>
                 <p>Publisher: {article.publisher}</p>
                 <p>Article ID: {article.articleId}</p>
+                <p>Category: {article.category}</p>
                 {/* Render file if available */}
                 {article.file && (
                   <a
@@ -345,12 +403,40 @@ export default function Component() {
               />
             </div>
             <div className="space-y-2">
+              <Label htmlFor="category">Category</Label>
+              <select
+                id="category"
+                onChange={handleCategoryChange}
+                value={adminArticle.category}
+                className="text-black"
+              >
+                <option value="">Select category</option>
+                {categoryOptions.map((category, index) => (
+                  <option key={index} value={category} className="text-black">
+                    {category}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div className="space-y-2">
               <Label htmlFor="admin-file-upload">Upload File</Label>
               <Input
                 id="admin-file-upload"
                 onChange={handleFileChange}
                 type="file"
               />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="new-category">New Category</Label>
+              <div className="flex">
+                <Input
+                  id="new-category"
+                  value={newCategory}
+                  onChange={handleNewCategoryChange}
+                  placeholder="Enter new category"
+                />
+                <Button onClick={handleAddNewCategory}>+</Button>
+              </div>
             </div>
             <Button
               className="justify-center w-full"

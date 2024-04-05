@@ -17,6 +17,7 @@ export default function News() {
             <p>{article.publisher}</p>
             <p>{article.date}</p>
             <p>{article.file}</p>
+            <p>{article.category}</p>
             </div>
         ))}
         This is the news component
