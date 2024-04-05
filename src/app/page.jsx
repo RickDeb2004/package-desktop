@@ -1,7 +1,4 @@
 "use client";
-
-import React, { useState, useEffect } from "react";
-
 import React, { useState, useContext, useEffect } from "react";
 
 import { Label } from "@/components/ui/label";
@@ -65,11 +62,8 @@ export default function Component() {
     }
   }, [showAdminPortal]);
 
-
   const { user } = useContext(AuthContext);
   const auth = getAuth(app);
-
-
 
   const uploadFile = async (file, folderName) => {
     const storage = getStorage(app);
@@ -256,8 +250,7 @@ export default function Component() {
       setNewCategory("");
     }
   };
-  const handleLoginClick = () => {};
-=======
+
   const handleLoginClick = async () => {
     const provider = new GoogleAuthProvider();
     try {
@@ -274,11 +267,11 @@ export default function Component() {
   return (
     <div className=" relative grid min-h-screen items-center justify-center gap-6 px-6 lg:grid-cols-2 xl:gap-0 border border-yellow-500">
       <div className="absolute top-0 right-0 mt-4 mr-4">
-       {Object.keys(user).length === 0 ? (
-        <Button onClick={handleLoginClick}>Login</Button>
-      ) : (
-        <UserMenu />
-      )}
+        {Object.keys(user).length === 0 ? (
+          <Button onClick={handleLoginClick}>Login</Button>
+        ) : (
+          <UserMenu />
+        )}
       </div>
       {!showAdminPortal && (
         <div className="space-y-4 border border-red-500">
