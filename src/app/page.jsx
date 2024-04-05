@@ -83,7 +83,6 @@ export default function Component() {
     const articlesRef = ref(db, "articles");
     let filteredQuery = articlesRef;
 
-    // Apply search criteria
     if (searchCriteria.date) {
       filteredQuery = query(
         filteredQuery,
@@ -92,21 +91,19 @@ export default function Component() {
       );
     }
     if (searchCriteria.heading) {
-      // Convert the searchCriteria.heading to lowercase for case-insensitive search
       const searchTerm = searchCriteria.heading.toLowerCase();
-      // Firebase Realtime Database doesn't support native full-text search
-      // So, you need to fetch all articles and then filter them in JavaScript
+
       const snapshot = await get(filteredQuery);
       const articles = [];
       snapshot.forEach((childSnapshot) => {
         const article = childSnapshot.val();
-        // Perform partial match search for heading
+
         if (article.heading.toLowerCase().includes(searchTerm)) {
           articles.push(article);
         }
       });
       setSearchResults(articles);
-      return; // Exit the function early to prevent further execution
+      return;
     }
     if (searchCriteria.publisher) {
       filteredQuery = query(
@@ -129,7 +126,7 @@ export default function Component() {
         equalTo(searchCriteria.category)
       );
     }
-    // Fetch the filtered articles
+
     const snapshot = await get(filteredQuery);
     const articles = [];
     snapshot.forEach((childSnapshot) => {
@@ -265,105 +262,205 @@ export default function Component() {
   };
 
   return (
-    <div className=" relative grid min-h-screen items-center justify-center gap-6 px-6 lg:grid-cols-2 xl:gap-0 border border-yellow-500">
+    // <div className=" relative grid min-h-screen items-center justify-center gap-6 px-6 lg:grid-cols-2 xl:gap-0 border border-yellow-500">
+    //   <div className="absolute top-0 right-0 mt-4 mr-4">
+    //     {Object.keys(user).length === 0 ? (
+    //       <Button onClick={handleLoginClick}>Login</Button>
+    //     ) : (
+    //       <UserMenu />
+    //     )}
+    //   </div>
+    //   {/* <div className="absolute top-0 right-0 mt-16 mr-16 ">
+    //     <button>add</button>
+    //   </div> */}
+    //   {!showAdminPortal && (
+    //     <div className="space-y-4 border border-red-500">
+    //       <>
+    //         <div className="space-y-2">
+    //           <h1 className="text-3xl font-bold">
+    //             Search for news articles by date
+    //           </h1>
+    //           <p className="text-gray-500 dark:text-gray-400">
+    //             Enter a date and other optional parameters to search for news
+    //             articles.
+    //           </p>
+    //         </div>
+    //         <div className="space-y-2">
+    //           <Label htmlFor="date">Date</Label>
+    //           <Input
+    //             id="date"
+    //             onChange={handleInputChange}
+    //             value={searchCriteria.date}
+    //             required
+    //             type="date"
+    //           />
+    //         </div>
+    //         <div className="space-y-2">
+    //           <Label htmlFor="heading">Heading</Label>
+    //           <Input
+    //             id="heading"
+    //             onChange={handleInputChange}
+    //             value={searchCriteria.heading}
+    //             placeholder="Enter the heading"
+    //           />
+    //         </div>
+    //         <div className="space-y-2">
+    //           <Label htmlFor="publisher">Publisher</Label>
+    //           <Input
+    //             id="publisher"
+    //             onChange={handleInputChange}
+    //             value={searchCriteria.publisher}
+    //             placeholder="Enter the publisher"
+    //           />
+    //         </div>
+    //         <div className="space-y-2">
+    //           <Label htmlFor="article-id">Article ID</Label>
+    //           <Input
+    //             id="article-id"
+    //             onChange={handleInputChange}
+    //             value={searchCriteria.articleId}
+    //             placeholder="Enter the article ID"
+    //           />
+    //         </div>
+    //         <div className="space-y-2">
+    //           <Label htmlFor="category">Category</Label>
+    //           <select
+    //             id="category"
+    //             onChange={handleInputChange}
+    //             value={searchCriteria.category}
+    //             className="text-black"
+    //           >
+    //             <option value="">Select category</option>
+    //             {categoryOptions.map((category, index) => (
+    //               <option key={index} value={category} className="text-black">
+    //                 {category}
+    //               </option>
+    //             ))}
+    //           </select>
+    //         </div>
+    //         <Button className="justify-center w-full" onClick={handleSearch}>
+    //           Search
+    //         </Button>
+    //         <Button onClick={handleClickAdd} className="justify-center w-full">
+    //           Add Article
+    //         </Button>
+    //       </>
+    //     </div>
+    //   )}
+    //   {/* Display Search Results */}
+    //   {/* {searchResults.length > 0 && (
+    //     <div className="space-y-4">
+    //       <h2 className="text-2xl font-semibold">Search Results</h2>
+    //       {searchResults.map((article, index) => (
+    //         <Card key={index}>
+    //           <CardHeader>{article.heading}</CardHeader>
+    //           <CardContent>
+    //             <News />
+    //           </CardContent>
+    //         </Card>
+    //       ))}
+    //     </div>
+    //   )} */}
+    //   {searchResults.length > 0 && (
+    //     <div className="space-y-4">
+    //       <h2 className="text-2xl font-semibold">Search Results</h2>
+    //       {searchResults.map((article, index) => (
+    //         <Card key={index}>
+    //           <CardHeader>{article.heading}</CardHeader>
+    //           <CardContent>
+    //             <p>Date: {article.date}</p>
+    //             <p>Publisher: {article.publisher}</p>
+    //             <p>Article ID: {article.articleId}</p>
+    //             <p>Category: {article.category}</p>
+    //             {/* Render file if available */}
+    //             {article.file && (
+    //               <a
+    //                 href={article.file}
+    //                 target="_blank"
+    //                 rel="noopener noreferrer"
+    //               >
+    //                 View File
+    //               </a>
+    //             )}
+    //           </CardContent>
+    //         </Card>
+    //       ))}
+    //     </div>
+    //   )}
+    <div className="relative min-h-screen flex flex-col items-center justify-center px-6 lg:flex-row lg:justify-center lg:gap-6 border border-yellow-500">
       <div className="absolute top-0 right-0 mt-4 mr-4">
-        {Object.keys(user).length === 0 ? (
+        
           <Button onClick={handleLoginClick}>Login</Button>
-        ) : (
-          <UserMenu />
-        )}
+          
+        
       </div>
-      {!showAdminPortal && (
-        <div className="space-y-4 border border-red-500">
-          <>
-            <div className="space-y-2">
-              <h1 className="text-3xl font-bold">
-                Search for news articles by date
-              </h1>
-              <p className="text-gray-500 dark:text-gray-400">
-                Enter a date and other optional parameters to search for news
-                articles.
-              </p>
+
+      {/* <div className="text-center mb-6">
+      <h1 className="text-3xl font-bold">Search for news articles</h1>
+      <p className="text-gray-500 dark:text-gray-400">
+        Enter criteria to filter articles
+      </p>
+    </div> */}
+      <div className="text-center lg:absolute lg:top-0 lg:w-full lg:mt-8">
+        <h1 className="text-3xl font-bold">Search for news articles</h1>
+        <p className="text-gray-500 dark:text-gray-400">
+          Enter criteria to filter articles
+        </p>
+      </div>
+      <div className="flex flex-col gap-20 lg:flex-row lg:space-x-2 mt-[-330px]">
+        <div className="space-y-2 border-2  border-gray-300 w-[550px] p-4 rounded-md shadow-sm">
+          <div className="flex gap-2 ">
+            <Input
+              id="heading"
+              onChange={handleInputChange}
+              value={searchCriteria.heading}
+              placeholder="Enter the heading"
+            />
+            <div className="flex justify-center lg:mt-0 lg:w-1/3">
+              <Button onClick={handleSearch} className="w-full">
+                Search
+              </Button>
             </div>
-            <div className="space-y-2">
-              <Label htmlFor="date">Date</Label>
-              <Input
-                id="date"
-                onChange={handleInputChange}
-                value={searchCriteria.date}
-                required
-                type="date"
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="heading">Heading</Label>
-              <Input
-                id="heading"
-                onChange={handleInputChange}
-                value={searchCriteria.heading}
-                placeholder="Enter the heading"
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="publisher">Publisher</Label>
-              <Input
-                id="publisher"
-                onChange={handleInputChange}
-                value={searchCriteria.publisher}
-                placeholder="Enter the publisher"
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="article-id">Article ID</Label>
-              <Input
-                id="article-id"
-                onChange={handleInputChange}
-                value={searchCriteria.articleId}
-                placeholder="Enter the article ID"
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="category">Category</Label>
-              <select
-                id="category"
-                onChange={handleInputChange}
-                value={searchCriteria.category}
-                className="text-black"
-              >
-                <option value="">Select category</option>
-                {categoryOptions.map((category, index) => (
-                  <option key={index} value={category} className="text-black">
-                    {category}
-                  </option>
-                ))}
-              </select>
-            </div>
-            <Button className="justify-center w-full" onClick={handleSearch}>
-              Search
-            </Button>
-            <Button onClick={handleClickAdd} className="justify-center w-full">
-              Add Article
-            </Button>
-          </>
+          </div>
         </div>
-      )}
+        <div className="space-y-2 border-2 border-gray-300 p-4 rounded-md shadow-sm">
+          <Input
+            id="date"
+            onChange={handleInputChange}
+            value={searchCriteria.date}
+            required
+            type="date"
+          />
+        </div>
+        <div className="space-y-2 border-2 border-gray-300 p-4 rounded-md shadow-sm">
+          <Label htmlFor="category">Category</Label>
+          <select
+            id="category"
+            onChange={handleInputChange}
+            value={searchCriteria.category}
+            className="text-black"
+          >
+            <option value="">Select category</option>
+            {categoryOptions.map((category, index) => (
+              <option key={index} value={category} className="text-black">
+                {category}
+              </option>
+            ))}
+          </select>
+        </div>
+        {/* Add more filter options here */}
+        {/* <div className="flex justify-center  lg:mt-8">
+        <Button onClick={handleSearch}>Search</Button>
+      </div> */}
+      </div>
+      {/* <div className="flex justify-center pt-28 lg:mt-0 lg:w-1/3">
+        <Button onClick={handleSearch} className="w-full">
+          Search
+        </Button>
+      </div> */}
       {/* Display Search Results */}
-      {/* {searchResults.length > 0 && (
-        <div className="space-y-4">
-          <h2 className="text-2xl font-semibold">Search Results</h2>
-          {searchResults.map((article, index) => (
-            <Card key={index}>
-              <CardHeader>{article.heading}</CardHeader>
-              <CardContent>
-                <News />
-              </CardContent>
-            </Card>
-          ))}
-        </div>
-      )} */}
       {searchResults.length > 0 && (
-        <div className="space-y-4">
-          <h2 className="text-2xl font-semibold">Search Results</h2>
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-6">
           {searchResults.map((article, index) => (
             <Card key={index}>
               <CardHeader>{article.heading}</CardHeader>
@@ -388,12 +485,12 @@ export default function Component() {
         </div>
       )}
       {showAdminPortal && (
-        <div className="space-y-4">
-          <div className="space-y-2 border border-white ">
-            <h2 className="text-2xl font-semibold">
+        <div className="space-y-4 absolute top-0 left-0 w-full h-full flex items-center justify-center">
+          <div className="space-y-2 max-w-md w-full  border border-white p-4">
+            <h2 className="text-2xl text-center font-semibold">
               Admin Portal - Add New Article
             </h2>
-            <div className="space-y-2">
+            <div className="space-y-2 w-full">
               <Label htmlFor="admin-date">Date</Label>
               <Input
                 id="admin-date"
