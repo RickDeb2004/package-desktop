@@ -133,10 +133,14 @@ export default function Component() {
     setLoginPage(false);
   };
 
+  const handleLoginSuccess = () => {
+    setLoginPage(false);
+  }
+
   return (
     <>
       {loginPage ? (
-        <Login />
+        <Login onLoginSuccess={handleLoginSuccess}  />
       ) : (
         <div className=" relative grid min-h-screen items-center justify-center gap-6 px-6 lg:grid-cols-2 xl:gap-0 border border-yellow-500">
           <div className="absolute top-0 right-0 mt-4 mr-4">

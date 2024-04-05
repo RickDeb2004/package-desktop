@@ -10,3 +10,10 @@ export const getArticles = (callback) => {
     callback(data);
   });
 };
+
+export const getAdminData = (callback) => {
+  onValue(ref(db, "admin"), (snapshot) => {
+    const data = snapshot.val();
+    callback(data);
+  });
+}
