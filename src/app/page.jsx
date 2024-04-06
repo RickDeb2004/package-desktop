@@ -275,7 +275,7 @@ export default function Component() {
                     style={{background: 'linear-gradient(-135deg, #F9EFAF, #F7A73E)'}}
                   />
                   <div className="flex justify-center lg:mt-0 lg:w-1/3">
-                    <Button onClick={handleSearch} className="w-full" style={{background: 'linear-gradient(135deg, #ECD06F, #ffa500)'}} >
+                    <Button onClick={handleSearch} className="w-full font-mono font-semibold" style={{background: 'linear-gradient(135deg, #ECD06F, #ffa500)'}} >
                       Search
                     </Button>
                   </div>
@@ -298,7 +298,7 @@ export default function Component() {
                   id="category"
                   onChange={handleInputChange}
                   value={searchCriteria.category}
-                  className="text-black"
+                  className="text-black font-mono font-semibold"
                   style={{background: 'linear-gradient(135deg, #ECD06F, #ffa500)'}}
                 >
                   <option value="" style={{background: 'linear-gradient(135deg, #ECD06F, #ffa500)'}}>Select category</option>
@@ -431,11 +431,11 @@ export default function Component() {
                       className='text-black'
                       
                     />
-                    <Button onClick={handleAddNewCategory} className="ml-2"style={{background: 'linear-gradient(135deg, #ECD06F, #ffa500)'}}>+</Button>
+                    <Button onClick={handleAddNewCategory} className="ml-2 font-mono font-semibold"style={{background: 'linear-gradient(135deg, #ECD06F, #ffa500)'}}>+</Button>
                   </div>
                 </div>
                 <Button
-                  className="justify-center w-full"
+                  className="justify-center w-full font-mono font-semibold"
                   onClick={handleAddArticleClick}
                   style={{background: 'linear-gradient(135deg, #ECD06F, #ffa500)'}}
                 >
@@ -443,7 +443,7 @@ export default function Component() {
                 </Button>
                 <Button
                   onClick={handleBackButtonClick}
-                  className="justify-center w-full"
+                  className="justify-center w-full font-mono font-semibold"
                   style={{background: 'linear-gradient(135deg, #ECD06F, #ffa500)'}}
                 >
                   Back

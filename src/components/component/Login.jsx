@@ -37,17 +37,17 @@ export default function Component({ onLoginSuccess }) {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-r from-orange-200 to-amber-200">
-      <div className="max-w-md w-full bg-black bg-opacity-55  rounded-lg p-8 shadow-2xl">
-        <h2 className="text-3xl font-bold text-white mb-8">
+    <div className="min-h-screen flex items-center justify-center " style={{background: 'linear-gradient(135deg, #ECD06F, #fff3e0)'}}>
+      <div className="max-w-md w-full  rounded-lg p-8 shadow-2xl" style={{background: 'linear-gradient(135deg, #ECD06F, #ffa500)'}}>
+        <h2 className="text-3xl font-bold text-black mb-8">
           Login To Continue
         </h2>
         <form className="bg-blend-saturation space-y-6" onSubmit={handleLogin}>
           <div>
-            <label className="block text-sm font-medium text-gray-300">
+            <label className="block text-sm font-medium text-black">
               Email
             </label>
-            <div className="mt-1 relative rounded-md shadow-sm">
+            <div className="mt-1 relative rounded-md shadow-sm text-black">
               <Input
                 name="email"
                 value={adminData.email}
@@ -62,7 +62,7 @@ export default function Component({ onLoginSuccess }) {
             </div>
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-300">
+            <label className="block text-sm font-medium text-black">
               Password
             </label>
             <div className="mt-1 relative rounded-md shadow-sm">
@@ -83,8 +83,9 @@ export default function Component({ onLoginSuccess }) {
           <div>
             <Button
               type="submit"
-              className="w-full bg-white text-[#065f46] py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-400"
+              className="w-full bg-white font-mono font-semibold text-[#065f46] py-2 px-4 border border-transparent rounded-md shadow-sm text-sm  hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-400"
               disabled={loading} // Disable button when loading is true
+              style={{background: 'linear-gradient(135deg, #ECD06F, #ffa500)'}}
             >
               {loading ? "Loading..." : "Login"} {/* Show Loading text when loading is true */}
             </Button>
