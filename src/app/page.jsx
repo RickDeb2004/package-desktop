@@ -52,20 +52,14 @@ export default function Component() {
     "World News",
     "Accident",
     "Love",
-    // Add more categories here
   ]);
   const [newCategory, setNewCategory] = useState("");
   const db = getDatabase(app);
   useEffect(() => {
     if (showAdminPortal) {
-      setSearchResults([]); // Reset search results when switching to admin portal
+      setSearchResults([]);
     }
   }, [showAdminPortal]);
-
-
- 
-  
-
 
   const uploadFile = async (file, folderName) => {
     const storage = getStorage(app);
@@ -80,7 +74,6 @@ export default function Component() {
     }
   };
 
-  
   const handleSearch = async () => {
     const articlesRef = ref(db, "articles");
     let filteredQuery = articlesRef;
@@ -153,19 +146,7 @@ export default function Component() {
       heading: value,
     }));
   };
-  // const handleFileChange = (e) => {
-  //   const file = e.target.files[0];
-  //   const allowedTypes = ["image/jpeg", "image/png", "application/pdf"]; // Define allowed file types
-  //   if (file && allowedTypes.includes(file.type)) {
-  //     setAdminArticle((prev) => ({
-  //       ...prev,
-  //       file: file,
-  //     }));
-  //   } else {
-  //     e.target.value = null; // Reset the file input
-  //     alert("Please select a valid file type (jpg, png, or pdf).");
-  //   }
-  // };
+
   const handleFileChange = async (e) => {
     const file = e.target.files[0];
     if (!file) return;
@@ -223,132 +204,13 @@ export default function Component() {
     }));
   };
 
-
   const handleLogoutClick = async () => {
     setLoginPage(false);
   };
 
   const handleLoginSuccess = () => {
     setLoginPage(false);
-  }
-
-  // return (
-  //   <>
-  //     {loginPage ? (
-  //       <Login onLoginSuccess={handleLoginSuccess}  />
-  //     ) : (
-  //       <div className=" relative grid min-h-screen items-center justify-center gap-6 px-6 lg:grid-cols-2 xl:gap-0 border border-yellow-500">
-  //         <div className="absolute top-0 right-0 mt-4 mr-4">
-  //           <Button onClick={handleLogoutClick}>Logout</Button>
-  //         </div>
-  //         {!showAdminPortal && (
-  //           <div className="space-y-4 border border-red-500">
-  //             <>
-  //               <div className="space-y-2">
-  //                 <h1 className="text-3xl font-bold">
-  //                   Search for news articles by date
-  //                 </h1>
-  //                 <p className="text-gray-500 dark:text-gray-400">
-  //                   Enter a date and other optional parameters to search for
-  //                   news articles.
-  //                 </p>
-  //               </div>
-  //               <div className="space-y-2">
-  //                 <Label htmlFor="date">Date</Label>
-  //                 <Input id="date" required type="date" />
-  //               </div>
-  //               <div className="space-y-2">
-  //                 <Label htmlFor="heading">Heading</Label>
-  //                 <Input id="heading" placeholder="Enter the heading" />
-  //               </div>
-  //               <div className="space-y-2">
-  //                 <Label htmlFor="publisher">Publisher</Label>
-  //                 <Input id="publisher" placeholder="Enter the publisher" />
-  //               </div>
-  //               <div className="space-y-2">
-  //                 <Label htmlFor="article-id">Article ID</Label>
-  //                 <Input id="article-id" placeholder="Enter the article ID" />
-  //               </div>
-  //               <Button className="justify-center w-full">Search</Button>
-  //               <Button
-  //                 onClick={handleClickAdd}
-  //                 className="justify-center w-full"
-  //               >
-  //                 Add Article
-  //               </Button>
-  //             </>
-  //           </div>
-  //         )}
-  //         {showAdminPortal && (
-  //           <div className="space-y-4">
-  //             <div className="space-y-2 border border-white ">
-  //               <h2 className="text-2xl font-semibold">
-  //                 Admin Portal - Add New Article
-  //               </h2>
-  //               <div className="space-y-2">
-  //                 <Label htmlFor="admin-date">Date</Label>
-  //                 <Input
-  //                   id="admin-date"
-  //                   value={adminArticle.date}
-  //                   onChange={handleDateChange}
-  //                   required
-  //                   type="date"
-  //                 />
-  //               </div>
-  //               <div className="space-y-2">
-  //                 <Label htmlFor="admin-heading">Heading</Label>
-  //                 <Input
-  //                   id="admin-heading"
-  //                   value={adminArticle.heading}
-  //                   onChange={handleHeadingChange}
-  //                   placeholder="Enter the heading"
-  //                 />
-  //               </div>
-  //               <div className="space-y-2">
-  //                 <Label htmlFor="admin-publisher">Publisher</Label>
-  //                 <Input
-  //                   id="admin-publisher"
-  //                   value={adminArticle.publisher}
-  //                   onChange={handlePublisherChange}
-  //                   placeholder="Enter the publisher"
-  //                 />
-  //               </div>
-  //               <div className="space-y-2">
-  //                 <Label htmlFor="admin-article-id">Article ID</Label>
-  //                 <Input
-  //                   id="admin-article-id"
-  //                   value={adminArticle.articleId}
-  //                   onChange={handleArticleIdChange}
-  //                   placeholder="Enter the article ID"
-  //                 />
-  //               </div>
-  //               <div className="space-y-2">
-  //                 <Label htmlFor="admin-file-upload">Upload File</Label>
-  //                 <Input
-  //                   id="admin-file-upload"
-  //                   onChange={handleFileChange}
-  //                   type="file"
-  //                 />
-  //               </div>
-  //               <Button
-  //                 className="justify-center w-full"
-  //                 onClick={handleAddArticleClick}
-  //               >
-  //                 Add
-  //               </Button>
-  //               <Button
-  //                 onClick={handleBackButtonClick}
-  //                 className="justify-center w-full"
-  //               >
-  //                 Back
-  //               </Button>
-  //             </div>
-  //           </div>
-  //         )}
-  //         <News />
-  //       </div>
-  //     )}
-  //   </>
+  };
 
   const handleCategoryChange = (e) => {
     const value = e.target.value;
@@ -381,334 +243,216 @@ export default function Component() {
     setLoginPage(true);
   };
   return (
-
-    // <div className=" relative grid min-h-screen items-center justify-center gap-6 px-6 lg:grid-cols-2 xl:gap-0 border border-yellow-500">
-    //   <div className="absolute top-0 right-0 mt-4 mr-4">
-    //     {Object.keys(user).length === 0 ? (
-    //       <Button onClick={handleLoginClick}>Login</Button>
-    //     ) : (
-    //       <UserMenu />
-    //     )}
-    //   </div>
-    //   {/* <div className="absolute top-0 right-0 mt-16 mr-16 ">
-    //     <button>add</button>
-    //   </div> */}
-    //   {!showAdminPortal && (
-    //     <div className="space-y-4 border border-red-500">
-    //       <>
-    //         <div className="space-y-2">
-    //           <h1 className="text-3xl font-bold">
-    //             Search for news articles by date
-    //           </h1>
-    //           <p className="text-gray-500 dark:text-gray-400">
-    //             Enter a date and other optional parameters to search for news
-    //             articles.
-    //           </p>
-    //         </div>
-    //         <div className="space-y-2">
-    //           <Label htmlFor="date">Date</Label>
-    //           <Input
-    //             id="date"
-    //             onChange={handleInputChange}
-    //             value={searchCriteria.date}
-    //             required
-    //             type="date"
-    //           />
-    //         </div>
-    //         <div className="space-y-2">
-    //           <Label htmlFor="heading">Heading</Label>
-    //           <Input
-    //             id="heading"
-    //             onChange={handleInputChange}
-    //             value={searchCriteria.heading}
-    //             placeholder="Enter the heading"
-    //           />
-    //         </div>
-    //         <div className="space-y-2">
-    //           <Label htmlFor="publisher">Publisher</Label>
-    //           <Input
-    //             id="publisher"
-    //             onChange={handleInputChange}
-    //             value={searchCriteria.publisher}
-    //             placeholder="Enter the publisher"
-    //           />
-    //         </div>
-    //         <div className="space-y-2">
-    //           <Label htmlFor="article-id">Article ID</Label>
-    //           <Input
-    //             id="article-id"
-    //             onChange={handleInputChange}
-    //             value={searchCriteria.articleId}
-    //             placeholder="Enter the article ID"
-    //           />
-    //         </div>
-    //         <div className="space-y-2">
-    //           <Label htmlFor="category">Category</Label>
-    //           <select
-    //             id="category"
-    //             onChange={handleInputChange}
-    //             value={searchCriteria.category}
-    //             className="text-black"
-    //           >
-    //             <option value="">Select category</option>
-    //             {categoryOptions.map((category, index) => (
-    //               <option key={index} value={category} className="text-black">
-    //                 {category}
-    //               </option>
-    //             ))}
-    //           </select>
-    //         </div>
-    //         <Button className="justify-center w-full" onClick={handleSearch}>
-    //           Search
-    //         </Button>
-    //         <Button onClick={handleClickAdd} className="justify-center w-full">
-    //           Add Article
-    //         </Button>
-    //       </>
-    //     </div>
-    //   )}
-    //   {/* Display Search Results */}
-    //   {/* {searchResults.length > 0 && (
-    //     <div className="space-y-4">
-    //       <h2 className="text-2xl font-semibold">Search Results</h2>
-    //       {searchResults.map((article, index) => (
-    //         <Card key={index}>
-    //           <CardHeader>{article.heading}</CardHeader>
-    //           <CardContent>
-    //             <News />
-    //           </CardContent>
-    //         </Card>
-    //       ))}
-    //     </div>
-    //   )} */}
-    //   {searchResults.length > 0 && (
-    //     <div className="space-y-4">
-    //       <h2 className="text-2xl font-semibold">Search Results</h2>
-    //       {searchResults.map((article, index) => (
-    //         <Card key={index}>
-    //           <CardHeader>{article.heading}</CardHeader>
-    //           <CardContent>
-    //             <p>Date: {article.date}</p>
-    //             <p>Publisher: {article.publisher}</p>
-    //             <p>Article ID: {article.articleId}</p>
-    //             <p>Category: {article.category}</p>
-    //             {/* Render file if available */}
-    //             {article.file && (
-    //               <a
-    //                 href={article.file}
-    //                 target="_blank"
-    //                 rel="noopener noreferrer"
-    //               >
-    //                 View File
-    //               </a>
-    //             )}
-    //           </CardContent>
-    //         </Card>
-    //       ))}
-    //     </div>
-    //   )}
-   
-        
-
     <>
-       {loginPage ? (
-          <Login onLoginSuccess={handleLoginSuccess}  />
-       ) :(
-    <div className=" relative grid min-h-screen items-center justify-center gap-6 px-6 lg:grid-cols-2 xl:gap-0 border border-yellow-500">
-      <div className="absolute top-0 right-0 mt-4 mr-4">
-       
-          <Button onClick={handleLogout}>Logout</Button>
-       
-
-      </div>
-
-      {/* <div className="text-center mb-6">
-      <h1 className="text-3xl font-bold">Search for news articles</h1>
-      <p className="text-gray-500 dark:text-gray-400">
-        Enter criteria to filter articles
-      </p>
-    </div> */}
-      <div className="text-center lg:absolute lg:top-0 lg:w-full lg:mt-8">
-        <h1 className="text-3xl font-bold">Search for news articles</h1>
-        <p className="text-gray-500 dark:text-gray-400">
-          Enter criteria to filter articles
-        </p>
-      </div>
-      <div className="flex flex-col gap-20 lg:flex-row lg:space-x-2 mt-[-330px]">
-        <div className="space-y-2 border-2  border-gray-300 w-[550px] p-4 rounded-md shadow-sm">
-          <div className="flex gap-2 ">
-            <Input
-              id="heading"
-              onChange={handleInputChange}
-              value={searchCriteria.heading}
-              placeholder="Enter the heading"
-            />
-            <div className="flex justify-center lg:mt-0 lg:w-1/3">
-              <Button onClick={handleSearch} className="w-full">
-                Search
-              </Button>
-            </div>
+      {loginPage ? (
+        <Login onLoginSuccess={handleLoginSuccess} />
+      ) : (
+        <div className=" relative grid min-h-screen items-center justify-center gap-6 px-6 lg:grid-cols-2 xl:gap-0 border border-yellow-500" style={{background: 'linear-gradient(135deg, #ECD06F, #fff3e0)'}}>
+          <div className="absolute top-0 right-0 mt-4 mr-4 flex gap-4">
+            <Button onClick={handleLogout} className="text-black font-mono font-semibold" style={{  backgroundColor: 'transparent' }}>Logout</Button>
+            <Button onClick={handleClickAdd} className="w-auto text-black font-mono font-semibold" style={{ backgroundColor: 'transparent' }}>
+              Add Article
+            </Button>
           </div>
-        </div>
-        <div className="space-y-2 border-2 border-gray-300 p-4 rounded-md shadow-sm">
-          <Input
-            id="date"
-            onChange={handleInputChange}
-            value={searchCriteria.date}
-            required
-            type="date"
-          />
-        </div>
-        <div className="space-y-2 border-2 border-gray-300 p-4 rounded-md shadow-sm">
-          <Label htmlFor="category">Category</Label>
-          <select
-            id="category"
-            onChange={handleInputChange}
-            value={searchCriteria.category}
-            className="text-black"
-          >
-            <option value="">Select category</option>
-            {categoryOptions.map((category, index) => (
-              <option key={index} value={category} className="text-black">
-                {category}
-              </option>
-            ))}
-          </select>
-        </div>
-        {/* Add more filter options here */}
-        {/* <div className="flex justify-center  lg:mt-8">
-        <Button onClick={handleSearch}>Search</Button>
-      </div> */}
-      </div>
-      {/* <div className="flex justify-center pt-28 lg:mt-0 lg:w-1/3">
-        <Button onClick={handleSearch} className="w-full">
-          Search
-        </Button>
-      </div> */}
-      {/* Display Search Results */}
-      {searchResults.length > 0 && (
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-6">
-          {searchResults.map((article, index) => (
-            <Card key={index}>
-              <CardHeader>{article.heading}</CardHeader>
-              <CardContent>
-                <p>Date: {article.date}</p>
-                <p>Publisher: {article.publisher}</p>
-                <p>Article ID: {article.articleId}</p>
-                <p>Category: {article.category}</p>
-                {/* Render file if available */}
-                {article.file && (
-                  <a
-                    href={article.file}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    View File
-                  </a>
-                )}
-              </CardContent>
-            </Card>
-          ))}
-        </div>
-      )}
-      {showAdminPortal && (
-        <div className="space-y-4 absolute top-0 left-0 w-full h-full flex items-center justify-center">
-          <div className="space-y-2 max-w-md w-full  border border-white p-4">
-            <h2 className="text-2xl text-center font-semibold">
-              Admin Portal - Add New Article
-            </h2>
-            <div className="space-y-2 w-full">
-              <Label htmlFor="admin-date">Date</Label>
-              <Input
-                id="admin-date"
-                value={adminArticle.date}
-                onChange={handleDateChange}
-                required
-                type="date"
-              />
+          {!showAdminPortal && (
+            <div className="text-center lg:absolute lg:top-0 lg:w-full lg:mt-8">
+              <h1 className="text-3xl font-bold text-black">Search for news articles</h1>
+              <p className="text-gray-500 dark:text-black-400">
+                Enter criteria to filter articles
+              </p>
             </div>
-            <div className="space-y-2">
-              <Label htmlFor="admin-heading">Heading</Label>
-              <Input
-                id="admin-heading"
-                value={adminArticle.heading}
-                onChange={handleHeadingChange}
-                placeholder="Enter the heading"
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="admin-publisher">Publisher</Label>
-              <Input
-                id="admin-publisher"
-                value={adminArticle.publisher}
-                onChange={handlePublisherChange}
-                placeholder="Enter the publisher"
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="admin-article-id">Article ID</Label>
-              <Input
-                id="admin-article-id"
-                value={adminArticle.articleId}
-                onChange={handleArticleIdChange}
-                placeholder="Enter the article ID"
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="category">Category</Label>
-              <select
-                id="category"
-                onChange={handleCategoryChange}
-                value={adminArticle.category}
-                className="text-black"
-              >
-                <option value="">Select category</option>
-                {categoryOptions.map((category, index) => (
-                  <option key={index} value={category} className="text-black">
-                    {category}
-                  </option>
-                ))}
-              </select>
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="admin-file-upload">Upload File</Label>
-              <Input
-                id="admin-file-upload"
-                onChange={handleFileChange}
-                type="file"
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="new-category">New Category</Label>
-              <div className="flex">
+          )}
+          {!showAdminPortal && (
+            <div className="flex flex-col gap-20 w-[150vw] lg:flex-row lg:space-x-2 mt-[-330px] ml-28">
+              <div className="space-y-2 border-2  border-gray-300 w-[550px] p-4 rounded-md shadow-sm">
+                <div className="flex gap-2 ">
+                  <Input
+                    id="heading"
+                    onChange={handleInputChange}
+                    value={searchCriteria.heading}
+                    placeholder="Enter the heading"
+                    className='text-black'
+                    style={{background: 'linear-gradient(-135deg, #F9EFAF, #F7A73E)'}}
+                  />
+                  <div className="flex justify-center lg:mt-0 lg:w-1/3">
+                    <Button onClick={handleSearch} className="w-full" style={{background: 'linear-gradient(135deg, #ECD06F, #ffa500)'}} >
+                      Search
+                    </Button>
+                  </div>
+                </div>
+              </div>
+              <div className="space-y-2 border-2 border-gray-300 p-4 rounded-md shadow-sm">
                 <Input
-                  id="new-category"
-                  value={newCategory}
-                  onChange={handleNewCategoryChange}
-                  placeholder="Enter new category"
+                  id="date"
+                  onChange={handleInputChange}
+                  value={searchCriteria.date}
+                  required
+                  type="date"
+                  style={{background: 'linear-gradient(-135deg, #F9EFAF, #F7A73E)'}}
+                  className='text-black'
+
                 />
-                <Button onClick={handleAddNewCategory}>+</Button>
+              </div>
+              <div className="space-y-2 border-2 border-gray-300 p-4  rounded-md shadow-sm">
+                <select
+                  id="category"
+                  onChange={handleInputChange}
+                  value={searchCriteria.category}
+                  className="text-black"
+                  style={{background: 'linear-gradient(135deg, #ECD06F, #ffa500)'}}
+                >
+                  <option value="" style={{background: 'linear-gradient(135deg, #ECD06F, #ffa500)'}}>Select category</option>
+                  {categoryOptions.map((category, index) => (
+                    <option key={index} value={category}  style={{background: 'linear-gradient(135deg, #ECD06F, #ffa500)'}}>
+                      {category}
+                    </option>
+                  ))}
+                </select>
               </div>
             </div>
-            <Button
-              className="justify-center w-full"
-              onClick={handleAddArticleClick}
-            >
-              Add
-            </Button>
-            <Button
-              onClick={handleBackButtonClick}
-              className="justify-center w-full"
-            >
-              Back
-            </Button>
-          </div>
+          )}
+
+          {/* Display Search Results */}
+          {searchResults.length > 0 && (
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-6">
+              {searchResults.map((article, index) => (
+                <Card key={index}>
+                  <CardHeader>{article.heading}</CardHeader>
+                  <CardContent>
+                    <p>Date: {article.date}</p>
+                    <p>Publisher: {article.publisher}</p>
+                    <p>Article ID: {article.articleId}</p>
+                    <p>Category: {article.category}</p>
+                    {/* Render file if available */}
+                    {article.file && (
+                      <a
+                        href={article.file}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        View File
+                      </a>
+                    )}
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          )}
+          {showAdminPortal && (
+            <div className="space-y-4 absolute top-0 left-0 w-full h-full flex items-center justify-center">
+              <div className="space-y-2 max-w-md w-full  border border-white p-4">
+                <h2 className="text-2xl text-center  text-black font-semibold">
+                  Admin Portal - Add New Article
+                </h2>
+                <div className="space-y-2 w-full">
+                  <Label htmlFor="admin-date" className='text-black'>Date</Label>
+                  <Input
+                    id="admin-date"
+                    value={adminArticle.date}
+                    onChange={handleDateChange}
+                    required
+                    type="date"
+                    className='text-black'
+                    style={{background: 'linear-gradient(-135deg, #F9EFAF, #F7A73E)'}}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="admin-heading" className='text-black'>Heading</Label>
+                  <Input
+                    id="admin-heading"
+                    value={adminArticle.heading}
+                    onChange={handleHeadingChange}
+                    placeholder="Enter the heading"
+                    className='text-black'
+                    style={{background: 'linear-gradient(-135deg, #F9EFAF, #F7A73E)'}}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="admin-publisher" className='text-black'>Publisher</Label>
+                  <Input
+                    id="admin-publisher"
+                    value={adminArticle.publisher}
+                    onChange={handlePublisherChange}
+                    placeholder="Enter the publisher"
+                    style={{background: 'linear-gradient(-135deg, #F9EFAF, #F7A73E)'}}
+                    className='text-black'
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="admin-article-id" className='text-black'>Article ID</Label>
+                  <Input
+                    id="admin-article-id"
+                    value={adminArticle.articleId}
+                    onChange={handleArticleIdChange}
+                    placeholder="Enter the article ID"
+                    style={{background: 'linear-gradient(-135deg, #F9EFAF, #F7A73E)'}}
+                    className='text-black'
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="category" className="text-black">Category</Label>
+                  <select
+                    id="category"
+                    onChange={handleCategoryChange}
+                    value={adminArticle.category}
+                    className="text-black ml-2"
+                    style={{background: 'linear-gradient(135deg, #ECD06F, #ffa500)'}}
+                  >
+                    <option value="">Select category</option>
+                    {categoryOptions.map((category, index) => (
+                      <option
+                        key={index}
+                        value={category}
+                        className="text-black"
+                        style={{background: 'linear-gradient(135deg, #ECD06F, #ffa500)'}}
+                      >
+                        {category}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="admin-file-upload" className='text-black'>Upload File</Label>
+                  <Input
+                    id="admin-file-upload"
+                    onChange={handleFileChange}
+                    type="file"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="new-category" className='text-black'>New Category</Label>
+                  <div className="flex">
+                    <Input
+                      id="new-category"
+                      value={newCategory}
+                      onChange={handleNewCategoryChange}
+                      placeholder="Enter new category"
+                      style={{background: 'linear-gradient(-135deg, #F9EFAF, #F7A73E)'}}
+                      className='text-black'
+                      
+                    />
+                    <Button onClick={handleAddNewCategory} className="ml-2"style={{background: 'linear-gradient(135deg, #ECD06F, #ffa500)'}}>+</Button>
+                  </div>
+                </div>
+                <Button
+                  className="justify-center w-full"
+                  onClick={handleAddArticleClick}
+                  style={{background: 'linear-gradient(135deg, #ECD06F, #ffa500)'}}
+                >
+                  Add
+                </Button>
+                <Button
+                  onClick={handleBackButtonClick}
+                  className="justify-center w-full"
+                  style={{background: 'linear-gradient(135deg, #ECD06F, #ffa500)'}}
+                >
+                  Back
+                </Button>
+              </div>
+            </div>
+          )}
         </div>
       )}
-    </div>
-       )
-    }
     </>
-
   );
 }
