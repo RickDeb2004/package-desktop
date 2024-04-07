@@ -74,10 +74,65 @@ export default function Component() {
     }
   };
 
-  const handleSearch = async () => {
-    const articlesRef = ref(db, "articles");
-    let filteredQuery = articlesRef;
+  // const handleSearch = async () => {
+  //   const articlesRef = ref(db, "articles");
+  //   let filteredQuery = articlesRef;
 
+  //   if (searchCriteria.date) {
+  //     filteredQuery = query(
+  //       filteredQuery,
+  //       orderByChild("date"),
+  //       equalTo(searchCriteria.date)
+  //     );
+  //   }
+  //   if (searchCriteria.heading) {
+  //     const searchTerm = searchCriteria.heading.toLowerCase();
+
+  //     const snapshot = await get(filteredQuery);
+  //     const articles = [];
+  //     snapshot.forEach((childSnapshot) => {
+  //       const article = childSnapshot.val();
+
+  //       if (article.heading.toLowerCase().includes(searchTerm)) {
+  //         articles.push(article);
+  //       }
+  //     });
+  //     setSearchResults(articles);
+  //     return;
+  //   }
+  //   if (searchCriteria.publisher) {
+  //     filteredQuery = query(
+  //       filteredQuery,
+  //       orderByChild("publisher"),
+  //       equalTo(searchCriteria.publisher)
+  //     );
+  //   }
+  //   if (searchCriteria.articleId) {
+  //     filteredQuery = query(
+  //       filteredQuery,
+  //       orderByChild("articleId"),
+  //       equalTo(searchCriteria.articleId)
+  //     );
+  //   }
+  //   if (searchCriteria.category) {
+  //     filteredQuery = query(
+  //       filteredQuery,
+  //       orderByChild("category"),
+  //       equalTo(searchCriteria.category)
+  //     );
+  //   }
+
+  //   const snapshot = await get(filteredQuery);
+  //   const articles = [];
+  //   snapshot.forEach((childSnapshot) => {
+  //     articles.push(childSnapshot.val());
+  //   });
+  //   setSearchResults(articles);
+  // };
+  const handleSearch = async () => {
+    let filteredQuery = ref(db, "articles");
+  
+    // Apply each search criteria sequentially
     if (searchCriteria.date) {
       filteredQuery = query(
         filteredQuery,
@@ -85,50 +140,29 @@ export default function Component() {
         equalTo(searchCriteria.date)
       );
     }
-    if (searchCriteria.heading) {
-      const searchTerm = searchCriteria.heading.toLowerCase();
-
-      const snapshot = await get(filteredQuery);
-      const articles = [];
-      snapshot.forEach((childSnapshot) => {
-        const article = childSnapshot.val();
-
-        if (article.heading.toLowerCase().includes(searchTerm)) {
-          articles.push(article);
-        }
-      });
-      setSearchResults(articles);
-      return;
-    }
-    if (searchCriteria.publisher) {
-      filteredQuery = query(
-        filteredQuery,
-        orderByChild("publisher"),
-        equalTo(searchCriteria.publisher)
-      );
-    }
-    if (searchCriteria.articleId) {
-      filteredQuery = query(
-        filteredQuery,
-        orderByChild("articleId"),
-        equalTo(searchCriteria.articleId)
-      );
-    }
-    if (searchCriteria.category) {
-      filteredQuery = query(
-        filteredQuery,
-        orderByChild("category"),
-        equalTo(searchCriteria.category)
-      );
-    }
-
+  
+    // Execute the first query
     const snapshot = await get(filteredQuery);
+  
+    // Filter the results further based on other criteria
     const articles = [];
     snapshot.forEach((childSnapshot) => {
-      articles.push(childSnapshot.val());
+      const article = childSnapshot.val();
+      // Apply additional filtering logic based on other search criteria
+      if (
+        (!searchCriteria.heading || article.heading.toLowerCase().includes(searchCriteria.heading.toLowerCase())) &&
+        (!searchCriteria.publisher || article.publisher === searchCriteria.publisher) &&
+        (!searchCriteria.articleId || article.articleId === searchCriteria.articleId) &&
+        (!searchCriteria.category || article.category === searchCriteria.category)
+      ) {
+        articles.push(article);
+      }
     });
+  
+    // Update search results
     setSearchResults(articles);
   };
+  
 
   const handleInputChange = (e) => {
     const { id, value } = e.target;
@@ -285,6 +319,7 @@ export default function Component() {
                 <Input
                   id="date"
                   onChange={handleInputChange}
+                  
                   value={searchCriteria.date}
                   required
                   type="date"
@@ -297,6 +332,7 @@ export default function Component() {
                 <select
                   id="category"
                   onChange={handleInputChange}
+                  onClick={handleSearch}
                   value={searchCriteria.category}
                   className="text-black font-mono font-semibold"
                   style={{background: 'linear-gradient(135deg, #ECD06F, #ffa500)'}}
