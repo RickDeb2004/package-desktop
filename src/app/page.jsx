@@ -14,9 +14,13 @@ import {
   query,
   get,
   equalTo,
+  remove,
 } from "firebase/database";
-
+// import { Button } from "@/components/uivo/button";
+import Link from "next/link";
 import News from "@/components/component/News";
+
+// import News from "@/components/component/News";
 
 import {
   getStorage,
@@ -31,6 +35,7 @@ import Login from "@/components/component/Login";
 export default function Component() {
   const [showAdminPortal, setShowAdminPortal] = useState(false);
   const [loginPage, setLoginPage] = useState(true);
+  const [readMore , setReadMore] = useState(-1)
   const [adminArticle, setAdminArticle] = useState({
     date: "",
     heading: "",
@@ -273,6 +278,30 @@ export default function Component() {
     }
   };
 
+  const deleteNews = (article) => async () => {
+    const articlesRef = ref(db, "articles");
+    const snapshot = await get(articlesRef);
+    snapshot.forEach((childSnapshot) => {
+      const childData = childSnapshot.val();
+      if (
+        childData.date === article.date &&
+        childData.heading === article.heading &&
+        childData.publisher === article.publisher &&
+        childData.articleId === article.articleId &&
+        childData.category === article.category &&
+        childData.file === article.file
+      ) {
+        // realtime database
+        remove(ref(db, `articles/${childSnapshot.key}`));
+      }
+    });
+  };
+
+const handleReadMore = (index) => {
+  console.log(searchResults[index]) ;
+  setReadMore(index) ;
+}
+
   const handleLogout = () => {
     setLoginPage(true);
   };
@@ -281,23 +310,38 @@ export default function Component() {
       {loginPage ? (
         <Login onLoginSuccess={handleLoginSuccess} />
       ) : (
-        <div className=" relative grid min-h-screen items-center justify-center gap-6 px-6 lg:grid-cols-2 xl:gap-0 border border-yellow-500" style={{background: 'linear-gradient(135deg, #ECD06F, #fff3e0)'}}>
-          <div className="absolute top-0 right-0 mt-4 mr-4 flex gap-4">
-            <Button onClick={handleLogout} className="text-black font-mono font-semibold" style={{  backgroundColor: 'transparent' }}>Logout</Button>
-            <Button onClick={handleClickAdd} className="w-auto text-black font-mono font-semibold" style={{ backgroundColor: 'transparent' }}>
+        <div
+          className=" relative flex flex-col h-auto min-h-screen items-center  gap-6 px-6 xl:gap-0 border border-yellow-500"
+          style={{ background: "linear-gradient(135deg, #ECD06F, #fff3e0)" }}
+        >
+          <div className="relative top-0 left-[35rem] mt-4 mr-4 flex gap-4">
+            <Button
+              onClick={handleLogout}
+              className="text-black font-mono font-semibold"
+              style={{ backgroundColor: "transparent" }}
+            >
+              Logout
+            </Button>
+            <Button
+              onClick={handleClickAdd}
+              className="w-auto text-black font-mono font-semibold"
+              style={{ backgroundColor: "transparent" }}
+            >
               Add Article
             </Button>
           </div>
-          {!showAdminPortal && (
-            <div className="text-center lg:absolute lg:top-0 lg:w-full lg:mt-8">
-              <h1 className="text-3xl font-bold text-black">Search for news articles</h1>
+          {!showAdminPortal && (readMore == -1) && (
+            <div className="text-center lg:relative lg:top-0 lg:w-full lg:mt-[-32px] mb-9">
+              <h1 className="text-3xl font-bold text-black">
+                Search for news articles
+              </h1>
               <p className="text-gray-500 dark:text-black-400">
                 Enter criteria to filter articles
               </p>
             </div>
           )}
-          {!showAdminPortal && (
-            <div className="flex flex-col gap-20 w-[150vw] lg:flex-row lg:space-x-2 mt-[-330px] ml-28">
+          {!showAdminPortal && (readMore == -1) && (
+            <div className="flex flex-col gap-20 w-[80vw] lg:flex-row lg:space-x-2  ">
               <div className="space-y-2 border-2  border-gray-300 w-[550px] p-4 rounded-md shadow-sm">
                 <div className="flex gap-2 ">
                   <Input
@@ -305,11 +349,19 @@ export default function Component() {
                     onChange={handleInputChange}
                     value={searchCriteria.heading}
                     placeholder="Enter the heading"
-                    className='text-black'
-                    style={{background: 'linear-gradient(-135deg, #F9EFAF, #F7A73E)'}}
+                    className="text-black"
+                    style={{
+                      background: "linear-gradient(-135deg, #F9EFAF, #F7A73E)",
+                    }}
                   />
                   <div className="flex justify-center lg:mt-0 lg:w-1/3">
-                    <Button onClick={handleSearch} className="w-full font-mono font-semibold" style={{background: 'linear-gradient(135deg, #ECD06F, #ffa500)'}} >
+                    <Button
+                      onClick={handleSearch}
+                      className="w-full font-mono font-semibold"
+                      style={{
+                        background: "linear-gradient(135deg, #ECD06F, #ffa500)",
+                      }}
+                    >
                       Search
                     </Button>
                   </div>
@@ -323,9 +375,10 @@ export default function Component() {
                   value={searchCriteria.date}
                   required
                   type="date"
-                  style={{background: 'linear-gradient(-135deg, #F9EFAF, #F7A73E)'}}
-                  className='text-black'
-
+                  style={{
+                    background: "linear-gradient(-135deg, #F9EFAF, #F7A73E)",
+                  }}
+                  className="text-black"
                 />
               </div>
               <div className="space-y-2 border-2 border-gray-300 p-4  rounded-md shadow-sm">
@@ -335,11 +388,26 @@ export default function Component() {
                   onClick={handleSearch}
                   value={searchCriteria.category}
                   className="text-black font-mono font-semibold"
-                  style={{background: 'linear-gradient(135deg, #ECD06F, #ffa500)'}}
+                  style={{
+                    background: "linear-gradient(135deg, #ECD06F, #ffa500)",
+                  }}
                 >
-                  <option value="" style={{background: 'linear-gradient(135deg, #ECD06F, #ffa500)'}}>Select category</option>
+                  <option
+                    value=""
+                    style={{
+                      background: "linear-gradient(135deg, #ECD06F, #ffa500)",
+                    }}
+                  >
+                    Select category
+                  </option>
                   {categoryOptions.map((category, index) => (
-                    <option key={index} value={category}  style={{background: 'linear-gradient(135deg, #ECD06F, #ffa500)'}}>
+                    <option
+                      key={index}
+                      value={category}
+                      style={{
+                        background: "linear-gradient(135deg, #ECD06F, #ffa500)",
+                      }}
+                    >
                       {category}
                     </option>
                   ))}
@@ -349,90 +417,142 @@ export default function Component() {
           )}
 
           {/* Display Search Results */}
-          {searchResults.length > 0 && (
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-6">
-              {searchResults.map((article, index) => (
-                <Card key={index}>
-                  <CardHeader>{article.heading}</CardHeader>
-                  <CardContent>
-                    <p>Date: {article.date}</p>
-                    <p>Publisher: {article.publisher}</p>
-                    <p>Article ID: {article.articleId}</p>
-                    <p>Category: {article.category}</p>
-                    {/* Render file if available */}
-                    {article.file && (
-                      <a
-                        href={article.file}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
-                        View File
-                      </a>
-                    )}
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
-          )}
-          {showAdminPortal && (
+          {(readMore == -1) && (
+          <div className="relative px-36 my-10 min-w-full">
+            {searchResults.length > 0 && (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                {searchResults.map((article, index) => (
+                  <div
+                    key={index}
+                    className="border border-yellow-400 rounded p-4 w-80 shadow-xl"
+                  >
+                    {/* <img
+                    alt="News Image"
+                    src="https://sp.yimg.com/ib/th?&id=ODL.c450481298ead71f45bf4bdd14bda34a&w=200&h=107&c=4&dpr=2&rs=1"
+                    className="w-full h-auto rounded"
+                  /> */}
+                    <div className="mt-4">
+                      <div className="flex justify-between">
+                        <span className="text-xs font-semibold text-gray-700">
+                          {article.category}
+                        </span>
+                        <p className="text-xs font-semibold text-gray-700">
+                          {article.date}
+                        </p>
+                      </div>
+                      <h1 className="text-lg font-semibold text-black mt-2">
+                        {article.heading}
+                      </h1>
+                      <p className="text-sm text-gray-700 mt-2">
+                        We're excited to announce the launch of the new Vercel
+                        platform, bringing a host of powerful features to our
+                        users.
+                      </p>
+                      <div className="flex justify-between mt-4">
+                        <Button
+                          className="text-blue-500"
+                          onClick={() => handleReadMore(index)}
+                          style={{
+                            background:
+                              "linear-gradient(135deg, #ECD06F, #ffa500)",
+                          }}
+                        >
+                          Read more
+                        </Button>
+                        <Button
+                          size="icon"
+                          variant="destructive"
+                          onClick={deleteNews(article)}
+                        >
+                          <TrashIcon className="w-4 h-4 via-gray-950" />
+                          <span className="sr-only">Delete</span>
+                        </Button>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>)}
+          {showAdminPortal && (readMore == -1) && (
             <div className="space-y-4 absolute top-0 left-0 w-full h-full flex items-center justify-center">
               <div className="space-y-2 max-w-md w-full  border border-white p-4">
                 <h2 className="text-2xl text-center  text-black font-semibold">
                   Admin Portal - Add New Article
                 </h2>
                 <div className="space-y-2 w-full">
-                  <Label htmlFor="admin-date" className='text-black'>Date</Label>
+                  <Label htmlFor="admin-date" className="text-black">
+                    Date
+                  </Label>
                   <Input
                     id="admin-date"
                     value={adminArticle.date}
                     onChange={handleDateChange}
                     required
                     type="date"
-                    className='text-black'
-                    style={{background: 'linear-gradient(-135deg, #F9EFAF, #F7A73E)'}}
+                    className="text-black"
+                    style={{
+                      background: "linear-gradient(-135deg, #F9EFAF, #F7A73E)",
+                    }}
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="admin-heading" className='text-black'>Heading</Label>
+                  <Label htmlFor="admin-heading" className="text-black">
+                    Heading
+                  </Label>
                   <Input
                     id="admin-heading"
                     value={adminArticle.heading}
                     onChange={handleHeadingChange}
                     placeholder="Enter the heading"
-                    className='text-black'
-                    style={{background: 'linear-gradient(-135deg, #F9EFAF, #F7A73E)'}}
+                    className="text-black"
+                    style={{
+                      background: "linear-gradient(-135deg, #F9EFAF, #F7A73E)",
+                    }}
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="admin-publisher" className='text-black'>Publisher</Label>
+                  <Label htmlFor="admin-publisher" className="text-black">
+                    Publisher
+                  </Label>
                   <Input
                     id="admin-publisher"
                     value={adminArticle.publisher}
                     onChange={handlePublisherChange}
                     placeholder="Enter the publisher"
-                    style={{background: 'linear-gradient(-135deg, #F9EFAF, #F7A73E)'}}
-                    className='text-black'
+                    style={{
+                      background: "linear-gradient(-135deg, #F9EFAF, #F7A73E)",
+                    }}
+                    className="text-black"
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="admin-article-id" className='text-black'>Article ID</Label>
+                  <Label htmlFor="admin-article-id" className="text-black">
+                    Article ID
+                  </Label>
                   <Input
                     id="admin-article-id"
                     value={adminArticle.articleId}
                     onChange={handleArticleIdChange}
                     placeholder="Enter the article ID"
-                    style={{background: 'linear-gradient(-135deg, #F9EFAF, #F7A73E)'}}
-                    className='text-black'
+                    style={{
+                      background: "linear-gradient(-135deg, #F9EFAF, #F7A73E)",
+                    }}
+                    className="text-black"
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="category" className="text-black">Category</Label>
+                  <Label htmlFor="category" className="text-black">
+                    Category
+                  </Label>
                   <select
                     id="category"
                     onChange={handleCategoryChange}
                     value={adminArticle.category}
                     className="text-black ml-2"
-                    style={{background: 'linear-gradient(135deg, #ECD06F, #ffa500)'}}
+                    style={{
+                      background: "linear-gradient(135deg, #ECD06F, #ffa500)",
+                    }}
                   >
                     <option value="">Select category</option>
                     {categoryOptions.map((category, index) => (
@@ -440,7 +560,10 @@ export default function Component() {
                         key={index}
                         value={category}
                         className="text-black"
-                        style={{background: 'linear-gradient(135deg, #ECD06F, #ffa500)'}}
+                        style={{
+                          background:
+                            "linear-gradient(135deg, #ECD06F, #ffa500)",
+                        }}
                       >
                         {category}
                       </option>
@@ -448,7 +571,9 @@ export default function Component() {
                   </select>
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="admin-file-upload" className='text-black'>Upload File</Label>
+                  <Label htmlFor="admin-file-upload" className="text-black">
+                    Upload File
+                  </Label>
                   <Input
                     id="admin-file-upload"
                     onChange={handleFileChange}
@@ -456,39 +581,94 @@ export default function Component() {
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="new-category" className='text-black'>New Category</Label>
+                  <Label htmlFor="new-category" className="text-black">
+                    New Category
+                  </Label>
                   <div className="flex">
                     <Input
                       id="new-category"
                       value={newCategory}
                       onChange={handleNewCategoryChange}
                       placeholder="Enter new category"
-                      style={{background: 'linear-gradient(-135deg, #F9EFAF, #F7A73E)'}}
-                      className='text-black'
-                      
+                      style={{
+                        background:
+                          "linear-gradient(-135deg, #F9EFAF, #F7A73E)",
+                      }}
+                      className="text-black"
                     />
-                    <Button onClick={handleAddNewCategory} className="ml-2 font-mono font-semibold"style={{background: 'linear-gradient(135deg, #ECD06F, #ffa500)'}}>+</Button>
+                    <Button
+                      onClick={handleAddNewCategory}
+                      className="ml-2 font-mono font-semibold"
+                      style={{
+                        background: "linear-gradient(135deg, #ECD06F, #ffa500)",
+                      }}
+                    >
+                      +
+                    </Button>
                   </div>
                 </div>
                 <Button
                   className="justify-center w-full font-mono font-semibold"
                   onClick={handleAddArticleClick}
-                  style={{background: 'linear-gradient(135deg, #ECD06F, #ffa500)'}}
+                  style={{
+                    background: "linear-gradient(135deg, #ECD06F, #ffa500)",
+                  }}
                 >
                   Add
                 </Button>
                 <Button
                   onClick={handleBackButtonClick}
                   className="justify-center w-full font-mono font-semibold"
-                  style={{background: 'linear-gradient(135deg, #ECD06F, #ffa500)'}}
+                  style={{
+                    background: "linear-gradient(135deg, #ECD06F, #ffa500)",
+                  }}
                 >
                   Back
                 </Button>
               </div>
             </div>
           )}
+
+          {/* Display Read More  */}
+          {readMore != -1 && (
+            <div className="relative px-36 my-10 min-w-full">
+              <News article={searchResults[readMore]} />
+              <Button
+                onClick={() => setReadMore(-1)}
+                className="justify-center w-full font-mono font-semibold"
+                style={{
+                  background: "linear-gradient(135deg, #ECD06F, #ffa500)",
+                }}
+              >
+                Back
+              </Button>
+            </div>
+          )}
+
+
         </div>
       )}
     </>
+  );
+}
+
+function TrashIcon(props) {
+  return (
+    <svg
+      {...props}
+      xmlns="http://www.w3.org/2000/svg"
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <path d="M3 6h18" />
+      <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6" />
+      <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2" />
+    </svg>
   );
 }
