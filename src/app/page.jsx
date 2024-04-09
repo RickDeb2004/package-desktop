@@ -18,6 +18,7 @@ import {
 } from "firebase/database";
 // import { Button } from "@/components/uivo/button";
 import Link from "next/link";
+import News from "@/components/component/News";
 
 // import News from "@/components/component/News";
 
@@ -34,6 +35,7 @@ import Login from "@/components/component/Login";
 export default function Component() {
   const [showAdminPortal, setShowAdminPortal] = useState(false);
   const [loginPage, setLoginPage] = useState(true);
+  const [readMore , setReadMore] = useState(-1)
   const [adminArticle, setAdminArticle] = useState({
     date: "",
     heading: "",
@@ -231,8 +233,6 @@ export default function Component() {
     setNewCategory(value);
   };
 
-
-
   const handleAddNewCategory = () => {
     if (newCategory.trim() !== "") {
       setCategoryOptions((prevOptions) => [...prevOptions, newCategory]);
@@ -257,11 +257,16 @@ export default function Component() {
         childData.category === article.category &&
         childData.file === article.file
       ) {
-       // realtime database 
+        // realtime database
         remove(ref(db, `articles/${childSnapshot.key}`));
       }
     });
-  }
+  };
+
+const handleReadMore = (index) => {
+  console.log(searchResults[index]) ;
+  setReadMore(index) ;
+}
 
   const handleLogout = () => {
     setLoginPage(true);
@@ -275,7 +280,7 @@ export default function Component() {
           className=" relative flex flex-col h-auto min-h-screen items-center  gap-6 px-6 xl:gap-0 border border-yellow-500"
           style={{ background: "linear-gradient(135deg, #ECD06F, #fff3e0)" }}
         >
-          <div className="relative top-0 left-[34rem] mt-4 mr-4 flex gap-4">
+          <div className="relative top-0 left-[35rem] mt-4 mr-4 flex gap-4">
             <Button
               onClick={handleLogout}
               className="text-black font-mono font-semibold"
@@ -291,7 +296,7 @@ export default function Component() {
               Add Article
             </Button>
           </div>
-          {!showAdminPortal && (
+          {!showAdminPortal && (readMore == -1) && (
             <div className="text-center lg:relative lg:top-0 lg:w-full lg:mt-[-32px] mb-9">
               <h1 className="text-3xl font-bold text-black">
                 Search for news articles
@@ -301,7 +306,7 @@ export default function Component() {
               </p>
             </div>
           )}
-          {!showAdminPortal && (
+          {!showAdminPortal && (readMore == -1) && (
             <div className="flex flex-col gap-20 w-[80vw] lg:flex-row lg:space-x-2  ">
               <div className="space-y-2 border-2  border-gray-300 w-[550px] p-4 rounded-md shadow-sm">
                 <div className="flex gap-2 ">
@@ -376,13 +381,14 @@ export default function Component() {
           )}
 
           {/* Display Search Results */}
+          {(readMore == -1) && (
           <div className="relative px-36 my-10 min-w-full">
             {searchResults.length > 0 && (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                 {searchResults.map((article, index) => (
                   <div
                     key={index}
-                    className="border border-yellow-400 rounded p-4 w-80"
+                    className="border border-yellow-400 rounded p-4 w-80 shadow-xl"
                   >
                     {/* <img
                     alt="News Image"
@@ -407,9 +413,16 @@ export default function Component() {
                         users.
                       </p>
                       <div className="flex justify-between mt-4">
-                        <Link href="#" className="text-blue-500">
+                        <Button
+                          className="text-blue-500"
+                          onClick={() => handleReadMore(index)}
+                          style={{
+                            background:
+                              "linear-gradient(135deg, #ECD06F, #ffa500)",
+                          }}
+                        >
                           Read more
-                        </Link>
+                        </Button>
                         <Button
                           size="icon"
                           variant="destructive"
@@ -424,8 +437,8 @@ export default function Component() {
                 ))}
               </div>
             )}
-          </div>
-          {showAdminPortal && (
+          </div>)}
+          {showAdminPortal && (readMore == -1) && (
             <div className="space-y-4 absolute top-0 left-0 w-full h-full flex items-center justify-center">
               <div className="space-y-2 max-w-md w-full  border border-white p-4">
                 <h2 className="text-2xl text-center  text-black font-semibold">
@@ -579,6 +592,24 @@ export default function Component() {
               </div>
             </div>
           )}
+
+          {/* Display Read More  */}
+          {readMore != -1 && (
+            <div className="relative px-36 my-10 min-w-full">
+              <News article={searchResults[readMore]} />
+              <Button
+                onClick={() => setReadMore(-1)}
+                className="justify-center w-full font-mono font-semibold"
+                style={{
+                  background: "linear-gradient(135deg, #ECD06F, #ffa500)",
+                }}
+              >
+                Back
+              </Button>
+            </div>
+          )}
+
+
         </div>
       )}
     </>
