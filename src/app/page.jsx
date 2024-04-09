@@ -14,6 +14,7 @@ import {
   query,
   get,
   equalTo,
+  remove,
 } from "firebase/database";
 // import { Button } from "@/components/uivo/button";
 import Link from "next/link";
@@ -230,6 +231,8 @@ export default function Component() {
     setNewCategory(value);
   };
 
+
+
   const handleAddNewCategory = () => {
     if (newCategory.trim() !== "") {
       setCategoryOptions((prevOptions) => [...prevOptions, newCategory]);
@@ -241,6 +244,25 @@ export default function Component() {
     }
   };
 
+  const deleteNews = (article) => async () => {
+    const articlesRef = ref(db, "articles");
+    const snapshot = await get(articlesRef);
+    snapshot.forEach((childSnapshot) => {
+      const childData = childSnapshot.val();
+      if (
+        childData.date === article.date &&
+        childData.heading === article.heading &&
+        childData.publisher === article.publisher &&
+        childData.articleId === article.articleId &&
+        childData.category === article.category &&
+        childData.file === article.file
+      ) {
+       // realtime database 
+        remove(ref(db, `articles/${childSnapshot.key}`));
+      }
+    });
+  }
+
   const handleLogout = () => {
     setLoginPage(true);
   };
@@ -250,10 +272,10 @@ export default function Component() {
         <Login onLoginSuccess={handleLoginSuccess} />
       ) : (
         <div
-          className=" relative grid min-h-screen items-center justify-center gap-6 px-6 lg:grid-cols-2 xl:gap-0 border border-yellow-500"
+          className=" relative flex flex-col h-auto min-h-screen items-center  gap-6 px-6 xl:gap-0 border border-yellow-500"
           style={{ background: "linear-gradient(135deg, #ECD06F, #fff3e0)" }}
         >
-          <div className="absolute top-0 right-0 mt-4 mr-4 flex gap-4">
+          <div className="relative top-0 left-[34rem] mt-4 mr-4 flex gap-4">
             <Button
               onClick={handleLogout}
               className="text-black font-mono font-semibold"
@@ -270,7 +292,7 @@ export default function Component() {
             </Button>
           </div>
           {!showAdminPortal && (
-            <div className="text-center lg:absolute lg:top-0 lg:w-full lg:mt-8">
+            <div className="text-center lg:relative lg:top-0 lg:w-full lg:mt-[-32px] mb-9">
               <h1 className="text-3xl font-bold text-black">
                 Search for news articles
               </h1>
@@ -280,7 +302,7 @@ export default function Component() {
             </div>
           )}
           {!showAdminPortal && (
-            <div className="flex flex-col gap-20 w-[150vw] lg:flex-row lg:space-x-2 mt-[-330px] ml-28">
+            <div className="flex flex-col gap-20 w-[80vw] lg:flex-row lg:space-x-2  ">
               <div className="space-y-2 border-2  border-gray-300 w-[550px] p-4 rounded-md shadow-sm">
                 <div className="flex gap-2 ">
                   <Input
@@ -354,49 +376,55 @@ export default function Component() {
           )}
 
           {/* Display Search Results */}
-          {searchResults.length > 0 && (
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-52">
-              {searchResults.map((article, index) => (
-                <div className="w-80 border-2 border-amber-300 shadow-xl rounded-md p-3">
-                  <img
+          <div className="relative px-36 my-10 min-w-full">
+            {searchResults.length > 0 && (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                {searchResults.map((article, index) => (
+                  <div
+                    key={index}
+                    className="border border-yellow-400 rounded p-4 w-80"
+                  >
+                    {/* <img
                     alt="News Image"
-                    className="aspect-[2/1] object-cover"
-                    height="200"
                     src="https://sp.yimg.com/ib/th?&id=ODL.c450481298ead71f45bf4bdd14bda34a&w=200&h=107&c=4&dpr=2&rs=1"
-                    width="400"
-                  />
-                  <div className="p-4">
-                    <div className="flex items-center justify-between mb-2">
-                      <span className="text-xs font-mono font-bold text-slate-800">
-                        {article.category}
-                      </span>
-                      <p className="text-sm font-mono font-bold text-zinc-900">{article.date}</p>
-                    </div>
-                    <h1 className="text-lg text-black font-semibold tracking-tight leading-none">
-                      {article.heading}
-                    </h1>
-                    <p className="text-sm text-gray-700 mt-2">
-                      We're excited to announce the launch of the new Vercel
-                      platform, bringing a host of powerful features to our
-                      users.
-                    </p>
-                    <div className="flex items-center justify-between mt-4">
-                      <Link
-                        className="text-blue-500 inline-block"
-                        href="#"
-                      >
-                        Read more
-                      </Link>
-                      <Button size="icon" variant="destructive">
-                        <TrashIcon className="w-4 h-4 via-gray-950" />
-                        <span className="sr-only">Delete</span>
-                      </Button>
+                    className="w-full h-auto rounded"
+                  /> */}
+                    <div className="mt-4">
+                      <div className="flex justify-between">
+                        <span className="text-xs font-semibold text-gray-700">
+                          {article.category}
+                        </span>
+                        <p className="text-xs font-semibold text-gray-700">
+                          {article.date}
+                        </p>
+                      </div>
+                      <h1 className="text-lg font-semibold text-black mt-2">
+                        {article.heading}
+                      </h1>
+                      <p className="text-sm text-gray-700 mt-2">
+                        We're excited to announce the launch of the new Vercel
+                        platform, bringing a host of powerful features to our
+                        users.
+                      </p>
+                      <div className="flex justify-between mt-4">
+                        <Link href="#" className="text-blue-500">
+                          Read more
+                        </Link>
+                        <Button
+                          size="icon"
+                          variant="destructive"
+                          onClick={deleteNews(article)}
+                        >
+                          <TrashIcon className="w-4 h-4 via-gray-950" />
+                          <span className="sr-only">Delete</span>
+                        </Button>
+                      </div>
                     </div>
                   </div>
-                </div>
-              ))}
-            </div>
-          )}
+                ))}
+              </div>
+            )}
+          </div>
           {showAdminPortal && (
             <div className="space-y-4 absolute top-0 left-0 w-full h-full flex items-center justify-center">
               <div className="space-y-2 max-w-md w-full  border border-white p-4">
