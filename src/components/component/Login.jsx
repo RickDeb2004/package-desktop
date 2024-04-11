@@ -3,10 +3,12 @@ import { Button } from "../uivo/button";
 import { useEffect, useState } from "react";
 import { getAdminData } from "@/helper/controller";
 import { get } from "firebase/database";
+import NotFound from "./404";
 
 export default function Component({ onLoginSuccess }) {
   const [adminData, setAdminData] = useState({ email: "", password: "" });
   const [loading, setLoading] = useState(false); // State variable to track loading state
+  const [open, setOpen] = useState(false);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -30,13 +32,14 @@ export default function Component({ onLoginSuccess }) {
         ) {
           onLoginSuccess();
         } else {
-          alert("Invalid credentials");
+          setOpen(true);
         }
       }, 2000); // Simulated delay of 2 seconds
     });
   };
 
   return (
+    <>
     <div className="min-h-screen flex items-center justify-center " style={{background: 'linear-gradient(135deg, #ECD06F, #fff3e0)'}}>
       <div className="max-w-md w-full  rounded-lg p-8 shadow-2xl" style={{background: 'linear-gradient(135deg, #ECD06F, #ffa500)'}}>
         <h2 className="text-3xl font-bold text-black mb-8">
@@ -93,6 +96,8 @@ export default function Component({ onLoginSuccess }) {
         </form>
       </div>
     </div>
+    <NotFound open={open} onClose={() => setOpen(false)} />
+    </>
   );
 }
 
