@@ -1,10 +1,8 @@
 "use client";
 import React, { useState, useContext, useEffect } from "react";
-
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { CardHeader, CardContent, Card } from "@/components/ui/card";
 import { app } from "../firebase";
 import {
   getDatabase,
@@ -16,21 +14,9 @@ import {
   equalTo,
   remove,
 } from "firebase/database";
-// import { Button } from "@/components/uivo/button";
-import Link from "next/link";
 import News from "@/components/component/News";
-
-// import News from "@/components/component/News";
-
-import {
-  getStorage,
-  ref as storageRef,
-  uploadBytes,
-  getDownloadURL,
-} from "firebase/storage";
-
-import UserMenu from "@/components/component/UserMenu";
 import Login from "@/components/component/Login";
+import { addCategory, getCategories } from "@/helper/controller";
 
 export default function Component() {
   const [showAdminPortal, setShowAdminPortal] = useState(false);
@@ -39,7 +25,7 @@ export default function Component() {
   const [adminArticle, setAdminArticle] = useState({
     date: "",
     heading: "",
-    publisher: "",
+    description: "",
     articleId: "",
     file: "",
     category: "",
@@ -48,92 +34,39 @@ export default function Component() {
   const [searchCriteria, setSearchCriteria] = useState({
     date: "",
     heading: "",
-    publisher: "",
+    description: "",
     articleId: "",
     criteria: "",
   });
+
   const [searchResults, setSearchResults] = useState([]);
-  const [categoryOptions, setCategoryOptions] = useState([
-    "World News",
-    "Accident",
-    "Love",
-  ]);
+  
+  // const [categoryOptions, setCategoryOptions] = useState([
+  //   "World News",
+  //   "Accident",
+  //   "Love",
+  // ]);
+
+  const [categoryOptions, setCategoryOptions] = useState([]);
+  useEffect(() => {
+    getCategories((data) => {
+      if (data) {
+        setCategoryOptions(Object.values(data));
+      }
+    });
+  }, []);
+
+
   const [newCategory, setNewCategory] = useState("");
+
   const db = getDatabase(app);
+
   useEffect(() => {
     if (showAdminPortal) {
       setSearchResults([]);
     }
   }, [showAdminPortal]);
 
-  const uploadFile = async (file, folderName) => {
-    const storage = getStorage(app);
-    const storageReference = storageRef(storage, `${folderName}/${file.name}`);
-    try {
-      await uploadBytes(storageReference, file);
-      const downloadURL = await getDownloadURL(storageReference);
-      return downloadURL;
-    } catch (error) {
-      console.error("Error uploading file:", error);
-      return null;
-    }
-  };
-
-  // const handleSearch = async () => {
-  //   const articlesRef = ref(db, "articles");
-  //   let filteredQuery = articlesRef;
-
-  //   if (searchCriteria.date) {
-  //     filteredQuery = query(
-  //       filteredQuery,
-  //       orderByChild("date"),
-  //       equalTo(searchCriteria.date)
-  //     );
-  //   }
-  //   if (searchCriteria.heading) {
-  //     const searchTerm = searchCriteria.heading.toLowerCase();
-
-  //     const snapshot = await get(filteredQuery);
-  //     const articles = [];
-  //     snapshot.forEach((childSnapshot) => {
-  //       const article = childSnapshot.val();
-
-  //       if (article.heading.toLowerCase().includes(searchTerm)) {
-  //         articles.push(article);
-  //       }
-  //     });
-  //     setSearchResults(articles);
-  //     return;
-  //   }
-  //   if (searchCriteria.publisher) {
-  //     filteredQuery = query(
-  //       filteredQuery,
-  //       orderByChild("publisher"),
-  //       equalTo(searchCriteria.publisher)
-  //     );
-  //   }
-  //   if (searchCriteria.articleId) {
-  //     filteredQuery = query(
-  //       filteredQuery,
-  //       orderByChild("articleId"),
-  //       equalTo(searchCriteria.articleId)
-  //     );
-  //   }
-  //   if (searchCriteria.category) {
-  //     filteredQuery = query(
-  //       filteredQuery,
-  //       orderByChild("category"),
-  //       equalTo(searchCriteria.category)
-  //     );
-  //   }
-
-  //   const snapshot = await get(filteredQuery);
-  //   const articles = [];
-  //   snapshot.forEach((childSnapshot) => {
-  //     articles.push(childSnapshot.val());
-  //   });
-  //   setSearchResults(articles);
-  // };
   const handleSearch = async () => {
     let filteredQuery = ref(db, "articles");
 
@@ -191,30 +124,6 @@ export default function Component() {
     }));
   };
 
-  const handleFileChange = async (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
-
-    let folderName = "";
-    if (file.type.includes("image")) {
-      folderName = "images";
-    } else if (file.type.includes("pdf")) {
-      folderName = "documents";
-    } else {
-      alert("Unsupported file type. Please upload an image or PDF file.");
-      return;
-    }
-
-    const fileURL = await uploadFile(file, folderName);
-    if (fileURL) {
-      setAdminArticle((prev) => ({
-        ...prev,
-        file: fileURL,
-      }));
-    } else {
-      alert("File upload failed. Please try again.");
-    }
-  };
   const handleAddArticleClick = () => {
     const database = getDatabase(app);
 
@@ -233,11 +142,11 @@ export default function Component() {
       date: value,
     }));
   };
-  const handlePublisherChange = (e) => {
+  const handleDescriptionChange = (e) => {
     const value = e.target.value;
     setAdminArticle((prev) => ({
       ...prev,
-      publisher: value,
+      description: value,
     }));
   };
   const handleArticleIdChange = (e) => {
@@ -274,11 +183,12 @@ export default function Component() {
 
   const handleAddNewCategory = () => {
     if (newCategory.trim() !== "") {
-      setCategoryOptions((prevOptions) => [...prevOptions, newCategory]);
       setAdminArticle((prev) => ({
         ...prev,
         category: newCategory,
       }));
+      console.log(newCategory);
+      addCategory(newCategory);
       setNewCategory("");
     }
   };
@@ -291,10 +201,9 @@ export default function Component() {
       if (
         childData.date === article.date &&
         childData.heading === article.heading &&
-        childData.publisher === article.publisher &&
+        childData.description === article.description &&
         childData.articleId === article.articleId &&
-        childData.category === article.category &&
-        childData.file === article.file
+        childData.category === article.category
       ) {
         // realtime database
         remove(ref(db, `articles/${childSnapshot.key}`));
@@ -420,7 +329,7 @@ export default function Component() {
             </div>
           )}
 
-          {/* Display Search Results */}
+          {/* Display selected News Page */}
           {readMore == -1 && (
             <div className="relative px-36 my-10 min-w-full">
               {searchResults.length > 0 && (
@@ -517,14 +426,14 @@ export default function Component() {
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="admin-publisher" className="text-black">
-                    Publisher
+                  <Label htmlFor="admin-description" className="text-black">
+                    Description
                   </Label>
                   <Input
-                    id="admin-publisher"
-                    value={adminArticle.publisher}
-                    onChange={handlePublisherChange}
-                    placeholder="Enter the publisher"
+                    id="admin-description"
+                    value={adminArticle.description}
+                    onChange={handleDescriptionChange}
+                    placeholder="Enter the Description"
                     style={{
                       background: "linear-gradient(-135deg, #F9EFAF, #F7A73E)",
                     }}
@@ -574,16 +483,6 @@ export default function Component() {
                       </option>
                     ))}
                   </select>
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="admin-file-upload" className="text-black">
-                    Upload File
-                  </Label>
-                  <Input
-                    id="admin-file-upload"
-                    onChange={handleFileChange}
-                    type="file"
-                  />
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="new-category" className="text-black">

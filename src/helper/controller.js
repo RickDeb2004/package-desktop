@@ -17,3 +17,14 @@ export const getAdminData = (callback) => {
     callback(data);
   });
 }
+
+export const addCategory = (category) => {
+  push(ref(db, "categories"), category);
+};
+
+export const getCategories = (callback) => {
+  onValue(ref(db, "categories"), (snapshot) => {
+    const data = snapshot.val();
+    callback(data);
+  });
+};
