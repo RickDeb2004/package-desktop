@@ -34,12 +34,12 @@ export default function Component() {
     date: "",
     heading: "",
     description: "",
-    articleId: "",
-    criteria: "",
+
+    category: "",
   });
 
   const [searchResults, setSearchResults] = useState([]);
-  
+
   // const [categoryOptions, setCategoryOptions] = useState([
   //   "World News",
   //   "Accident",
@@ -55,7 +55,6 @@ export default function Component() {
     });
   }, []);
 
-
   const [newCategory, setNewCategory] = useState("");
 
   const db = getDatabase(app);
@@ -65,7 +64,6 @@ export default function Component() {
       setSearchResults([]);
     }
   }, [showAdminPortal]);
-
 
   const uploadFile = async (file, folderName) => {
     const storage = getStorage(app);
@@ -79,7 +77,6 @@ export default function Component() {
       return null;
     }
   };
-
 
   const handleSearch = async () => {
     let filteredQuery = ref(db, "articles");
@@ -207,7 +204,6 @@ export default function Component() {
         childData.description === article.description &&
         childData.articleId === article.articleId &&
         childData.category === article.category
-
       ) {
         // realtime database
         remove(ref(db, `articles/${childSnapshot.key}`));
@@ -442,7 +438,6 @@ export default function Component() {
                     value={adminArticle.description}
                     onChange={handleDescriptionChange}
                     placeholder="Enter the Description"
-
                     style={{
                       background: "linear-gradient(-135deg, #F9EFAF, #F7A73E)",
                     }}
