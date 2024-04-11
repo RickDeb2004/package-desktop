@@ -35,7 +35,7 @@ import Login from "@/components/component/Login";
 export default function Component() {
   const [showAdminPortal, setShowAdminPortal] = useState(false);
   const [loginPage, setLoginPage] = useState(true);
-  const [readMore , setReadMore] = useState(-1)
+  const [readMore, setReadMore] = useState(-1);
   const [adminArticle, setAdminArticle] = useState({
     date: "",
     heading: "",
@@ -136,7 +136,7 @@ export default function Component() {
   // };
   const handleSearch = async () => {
     let filteredQuery = ref(db, "articles");
-  
+
     // Apply each search criteria sequentially
     if (searchCriteria.date) {
       filteredQuery = query(
@@ -145,29 +145,34 @@ export default function Component() {
         equalTo(searchCriteria.date)
       );
     }
-  
+
     // Execute the first query
     const snapshot = await get(filteredQuery);
-  
+
     // Filter the results further based on other criteria
     const articles = [];
     snapshot.forEach((childSnapshot) => {
       const article = childSnapshot.val();
       // Apply additional filtering logic based on other search criteria
       if (
-        (!searchCriteria.heading || article.heading.toLowerCase().includes(searchCriteria.heading.toLowerCase())) &&
-        (!searchCriteria.publisher || article.publisher === searchCriteria.publisher) &&
-        (!searchCriteria.articleId || article.articleId === searchCriteria.articleId) &&
-        (!searchCriteria.category || article.category === searchCriteria.category)
+        (!searchCriteria.heading ||
+          article.heading
+            .toLowerCase()
+            .includes(searchCriteria.heading.toLowerCase())) &&
+        (!searchCriteria.publisher ||
+          article.publisher === searchCriteria.publisher) &&
+        (!searchCriteria.articleId ||
+          article.articleId === searchCriteria.articleId) &&
+        (!searchCriteria.category ||
+          article.category === searchCriteria.category)
       ) {
         articles.push(article);
       }
     });
-  
+
     // Update search results
     setSearchResults(articles);
   };
-  
 
   const handleInputChange = (e) => {
     const { id, value } = e.target;
@@ -297,10 +302,10 @@ export default function Component() {
     });
   };
 
-const handleReadMore = (index) => {
-  console.log(searchResults[index]) ;
-  setReadMore(index) ;
-}
+  const handleReadMore = (index) => {
+    console.log(searchResults[index]);
+    setReadMore(index);
+  };
 
   const handleLogout = () => {
     setLoginPage(true);
@@ -330,7 +335,7 @@ const handleReadMore = (index) => {
               Add Article
             </Button>
           </div>
-          {!showAdminPortal && (readMore == -1) && (
+          {!showAdminPortal && readMore == -1 && (
             <div className="text-center lg:relative lg:top-0 lg:w-full lg:mt-[-32px] mb-9">
               <h1 className="text-3xl font-bold text-black">
                 Search for news articles
@@ -340,7 +345,7 @@ const handleReadMore = (index) => {
               </p>
             </div>
           )}
-          {!showAdminPortal && (readMore == -1) && (
+          {!showAdminPortal && readMore == -1 && (
             <div className="flex flex-col gap-20 w-[80vw] lg:flex-row lg:space-x-2  ">
               <div className="space-y-2 border-2  border-gray-300 w-[550px] p-4 rounded-md shadow-sm">
                 <div className="flex gap-2 ">
@@ -349,7 +354,7 @@ const handleReadMore = (index) => {
                     onChange={handleInputChange}
                     value={searchCriteria.heading}
                     placeholder="Enter the heading"
-                    className="text-black"
+                    className="text-black placeholder-black"
                     style={{
                       background: "linear-gradient(-135deg, #F9EFAF, #F7A73E)",
                     }}
@@ -371,7 +376,6 @@ const handleReadMore = (index) => {
                 <Input
                   id="date"
                   onChange={handleInputChange}
-                  
                   value={searchCriteria.date}
                   required
                   type="date"
@@ -417,64 +421,65 @@ const handleReadMore = (index) => {
           )}
 
           {/* Display Search Results */}
-          {(readMore == -1) && (
-          <div className="relative px-36 my-10 min-w-full">
-            {searchResults.length > 0 && (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                {searchResults.map((article, index) => (
-                  <div
-                    key={index}
-                    className="border border-yellow-400 rounded p-4 w-80 shadow-xl"
-                  >
-                    {/* <img
+          {readMore == -1 && (
+            <div className="relative px-36 my-10 min-w-full">
+              {searchResults.length > 0 && (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                  {searchResults.map((article, index) => (
+                    <div
+                      key={index}
+                      className="border border-yellow-400 rounded p-4 w-80 shadow-xl"
+                    >
+                      {/* <img
                     alt="News Image"
                     src="https://sp.yimg.com/ib/th?&id=ODL.c450481298ead71f45bf4bdd14bda34a&w=200&h=107&c=4&dpr=2&rs=1"
                     className="w-full h-auto rounded"
                   /> */}
-                    <div className="mt-4">
-                      <div className="flex justify-between">
-                        <span className="text-xs font-semibold text-gray-700">
-                          {article.category}
-                        </span>
-                        <p className="text-xs font-semibold text-gray-700">
-                          {article.date}
+                      <div className="mt-4">
+                        <div className="flex justify-between">
+                          <span className="text-xs font-semibold text-gray-700">
+                            {article.category}
+                          </span>
+                          <p className="text-xs font-semibold text-gray-700">
+                            {article.date}
+                          </p>
+                        </div>
+                        <h1 className="text-lg font-semibold text-black mt-2">
+                          {article.heading}
+                        </h1>
+                        <p className="text-sm text-gray-700 mt-2">
+                          We're excited to announce the launch of the new Vercel
+                          platform, bringing a host of powerful features to our
+                          users.
                         </p>
-                      </div>
-                      <h1 className="text-lg font-semibold text-black mt-2">
-                        {article.heading}
-                      </h1>
-                      <p className="text-sm text-gray-700 mt-2">
-                        We're excited to announce the launch of the new Vercel
-                        platform, bringing a host of powerful features to our
-                        users.
-                      </p>
-                      <div className="flex justify-between mt-4">
-                        <Button
-                          className="text-blue-500"
-                          onClick={() => handleReadMore(index)}
-                          style={{
-                            background:
-                              "linear-gradient(135deg, #ECD06F, #ffa500)",
-                          }}
-                        >
-                          Read more
-                        </Button>
-                        <Button
-                          size="icon"
-                          variant="destructive"
-                          onClick={deleteNews(article)}
-                        >
-                          <TrashIcon className="w-4 h-4 via-gray-950" />
-                          <span className="sr-only">Delete</span>
-                        </Button>
+                        <div className="flex justify-between mt-4">
+                          <Button
+                            className="text-blue-500"
+                            onClick={() => handleReadMore(index)}
+                            style={{
+                              background:
+                                "linear-gradient(135deg, #ECD06F, #ffa500)",
+                            }}
+                          >
+                            Read more
+                          </Button>
+                          <Button
+                            size="icon"
+                            variant="destructive"
+                            onClick={deleteNews(article)}
+                          >
+                            <TrashIcon className="w-4 h-4 via-gray-950" />
+                            <span className="sr-only">Delete</span>
+                          </Button>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>)}
-          {showAdminPortal && (readMore == -1) && (
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
+          {showAdminPortal && readMore == -1 && (
             <div className="space-y-4 absolute top-0 left-0 w-full h-full flex items-center justify-center">
               <div className="space-y-2 max-w-md w-full  border border-white p-4">
                 <h2 className="text-2xl text-center  text-black font-semibold">
@@ -644,8 +649,6 @@ const handleReadMore = (index) => {
               </Button>
             </div>
           )}
-
-
         </div>
       )}
     </>
