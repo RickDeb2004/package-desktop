@@ -192,6 +192,7 @@ export default function Component() {
       ) {
         // realtime database
         remove(ref(db, `articles/${childSnapshot.key}`));
+        handleSearch();
       }
     });
   };
