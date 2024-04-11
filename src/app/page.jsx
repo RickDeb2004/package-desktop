@@ -26,7 +26,6 @@ export default function Component() {
     date: "",
     heading: "",
     description: "",
-    file: "",
     category: "",
   });
 
@@ -64,19 +63,6 @@ export default function Component() {
       setSearchResults([]);
     }
   }, [showAdminPortal]);
-
-  const uploadFile = async (file, folderName) => {
-    const storage = getStorage(app);
-    const storageReference = storageRef(storage, `${folderName}/${file.name}`);
-    try {
-      await uploadBytes(storageReference, file);
-      const downloadURL = await getDownloadURL(storageReference);
-      return downloadURL;
-    } catch (error) {
-      console.error("Error uploading file:", error);
-      return null;
-    }
-  };
 
   const handleSearch = async () => {
     let filteredQuery = ref(db, "articles");
@@ -133,7 +119,6 @@ export default function Component() {
 
   const handleAddArticleClick = () => {
     const database = getDatabase(app);
-
     push(ref(database, "articles"), adminArticle);
   };
   const handleClickAdd = () => {
@@ -207,6 +192,7 @@ export default function Component() {
       ) {
         // realtime database
         remove(ref(db, `articles/${childSnapshot.key}`));
+        handleSearch();
       }
     });
   };
@@ -347,7 +333,7 @@ export default function Component() {
                     alt="News Image"
                     src="https://sp.yimg.com/ib/th?&id=ODL.c450481298ead71f45bf4bdd14bda34a&w=200&h=107&c=4&dpr=2&rs=1"
                     className="w-full h-auto rounded"
-                  /> */}
+                       /> */}
                       <div className="mt-4">
                         <div className="flex justify-between">
                           <span className="text-xs font-semibold text-gray-700">
@@ -361,9 +347,10 @@ export default function Component() {
                           {article.heading}
                         </h1>
                         <p className="text-sm text-gray-700 mt-2">
-                          We're excited to announce the launch of the new Vercel
-                          platform, bringing a host of powerful features to our
-                          users.
+                          {/* only take the first hundred characters of the description, if descriptioon is more than 100 words */}
+                          {article.description?.length > 150
+                            ? article.description?.substring(0, 150) + "..."
+                            : article.description}
                         </p>
                         <div className="flex justify-between mt-4">
                           <Button
@@ -429,11 +416,11 @@ export default function Component() {
                     }}
                   />
                 </div>
-                <div className="space-y-2">
+                <div className=" flex flex-col space-y-2">
                   <Label htmlFor="admin-description" className="text-black">
                     Description
                   </Label>
-                  <Input
+                  <textarea
                     id="admin-description"
                     value={adminArticle.description}
                     onChange={handleDescriptionChange}
@@ -441,7 +428,7 @@ export default function Component() {
                     style={{
                       background: "linear-gradient(-135deg, #F9EFAF, #F7A73E)",
                     }}
-                    className="text-black rounded-md shadow-md"
+                    className="text-black rounded-md shadow-md placeholder:black p-2 h-32 w-full"
                   />
                 </div>
 
