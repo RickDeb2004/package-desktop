@@ -99,7 +99,7 @@ const createWindow = () => {
     },
   });
 
-  win.loadFile(path.join(__dirname, "src", "app", "page.jsx"));
+  win.loadURL("https://package-desktop.vercel.app/");
 };
 
 // When the app is ready, create the window
