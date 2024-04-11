@@ -40,7 +40,7 @@ export default function Component() {
     date: "",
     heading: "",
     publisher: "",
-    articleId: "",
+
     file: "",
     category: "",
   });
@@ -49,7 +49,7 @@ export default function Component() {
     date: "",
     heading: "",
     publisher: "",
-    articleId: "",
+
     criteria: "",
   });
   const [searchResults, setSearchResults] = useState([]);
@@ -79,65 +79,9 @@ export default function Component() {
     }
   };
 
-  // const handleSearch = async () => {
-  //   const articlesRef = ref(db, "articles");
-  //   let filteredQuery = articlesRef;
-
-  //   if (searchCriteria.date) {
-  //     filteredQuery = query(
-  //       filteredQuery,
-  //       orderByChild("date"),
-  //       equalTo(searchCriteria.date)
-  //     );
-  //   }
-  //   if (searchCriteria.heading) {
-  //     const searchTerm = searchCriteria.heading.toLowerCase();
-
-  //     const snapshot = await get(filteredQuery);
-  //     const articles = [];
-  //     snapshot.forEach((childSnapshot) => {
-  //       const article = childSnapshot.val();
-
-  //       if (article.heading.toLowerCase().includes(searchTerm)) {
-  //         articles.push(article);
-  //       }
-  //     });
-  //     setSearchResults(articles);
-  //     return;
-  //   }
-  //   if (searchCriteria.publisher) {
-  //     filteredQuery = query(
-  //       filteredQuery,
-  //       orderByChild("publisher"),
-  //       equalTo(searchCriteria.publisher)
-  //     );
-  //   }
-  //   if (searchCriteria.articleId) {
-  //     filteredQuery = query(
-  //       filteredQuery,
-  //       orderByChild("articleId"),
-  //       equalTo(searchCriteria.articleId)
-  //     );
-  //   }
-  //   if (searchCriteria.category) {
-  //     filteredQuery = query(
-  //       filteredQuery,
-  //       orderByChild("category"),
-  //       equalTo(searchCriteria.category)
-  //     );
-  //   }
-
-  //   const snapshot = await get(filteredQuery);
-  //   const articles = [];
-  //   snapshot.forEach((childSnapshot) => {
-  //     articles.push(childSnapshot.val());
-  //   });
-  //   setSearchResults(articles);
-  // };
   const handleSearch = async () => {
     let filteredQuery = ref(db, "articles");
 
-    // Apply each search criteria sequentially
     if (searchCriteria.date) {
       filteredQuery = query(
         filteredQuery,
@@ -149,11 +93,10 @@ export default function Component() {
     // Execute the first query
     const snapshot = await get(filteredQuery);
 
-    // Filter the results further based on other criteria
     const articles = [];
     snapshot.forEach((childSnapshot) => {
       const article = childSnapshot.val();
-      // Apply additional filtering logic based on other search criteria
+
       if (
         (!searchCriteria.heading ||
           article.heading
@@ -161,8 +104,6 @@ export default function Component() {
             .includes(searchCriteria.heading.toLowerCase())) &&
         (!searchCriteria.publisher ||
           article.publisher === searchCriteria.publisher) &&
-        (!searchCriteria.articleId ||
-          article.articleId === searchCriteria.articleId) &&
         (!searchCriteria.category ||
           article.category === searchCriteria.category)
       ) {
@@ -240,13 +181,6 @@ export default function Component() {
       publisher: value,
     }));
   };
-  const handleArticleIdChange = (e) => {
-    const value = e.target.value;
-    setAdminArticle((prev) => ({
-      ...prev,
-      articleId: value,
-    }));
-  };
 
   const handleLogoutClick = async () => {
     setLoginPage(false);
@@ -292,7 +226,6 @@ export default function Component() {
         childData.date === article.date &&
         childData.heading === article.heading &&
         childData.publisher === article.publisher &&
-        childData.articleId === article.articleId &&
         childData.category === article.category &&
         childData.file === article.file
       ) {
@@ -323,14 +256,18 @@ export default function Component() {
             <Button
               onClick={handleLogout}
               className="text-black font-mono font-semibold"
-              style={{ backgroundColor: "transparent" }}
+              style={{
+                background: "linear-gradient(135deg, #ECD06F, #ffa500)",
+              }}
             >
               Logout
             </Button>
             <Button
               onClick={handleClickAdd}
               className="w-auto text-black font-mono font-semibold"
-              style={{ backgroundColor: "transparent" }}
+              style={{
+                background: "linear-gradient(135deg, #ECD06F, #ffa500)",
+              }}
             >
               Add Article
             </Button>
@@ -347,14 +284,14 @@ export default function Component() {
           )}
           {!showAdminPortal && readMore == -1 && (
             <div className="flex flex-col gap-20 w-[80vw] lg:flex-row lg:space-x-2  ">
-              <div className="space-y-2 border-2  border-gray-300 w-[550px] p-4 rounded-md shadow-sm">
+              <div className="space-y-2  w-[550px] p-4 rounded-md shadow-sm">
                 <div className="flex gap-2 ">
                   <Input
                     id="heading"
                     onChange={handleInputChange}
                     value={searchCriteria.heading}
                     placeholder="Enter the heading"
-                    className="text-black placeholder-black"
+                    className="text-black placeholder-black rounded-md shadow-md"
                     style={{
                       background: "linear-gradient(-135deg, #F9EFAF, #F7A73E)",
                     }}
@@ -372,7 +309,7 @@ export default function Component() {
                   </div>
                 </div>
               </div>
-              <div className="space-y-2 border-2 border-gray-300 p-4 rounded-md shadow-sm">
+              <div className="space-y-2  p-4 rounded-md shadow-sm">
                 <Input
                   id="date"
                   onChange={handleInputChange}
@@ -382,16 +319,16 @@ export default function Component() {
                   style={{
                     background: "linear-gradient(-135deg, #F9EFAF, #F7A73E)",
                   }}
-                  className="text-black"
+                  className="text-black rounded-md shadow-md"
                 />
               </div>
-              <div className="space-y-2 border-2 border-gray-300 p-4  rounded-md shadow-sm">
+              <div className="space-y-2  p-4  rounded-md shadow-sm">
                 <select
                   id="category"
                   onChange={handleInputChange}
                   onClick={handleSearch}
                   value={searchCriteria.category}
-                  className="text-black font-mono font-semibold"
+                  className="text-black font-mono font-semibold p-2 rounded-md shadow-md"
                   style={{
                     background: "linear-gradient(135deg, #ECD06F, #ffa500)",
                   }}
@@ -481,12 +418,12 @@ export default function Component() {
           )}
           {showAdminPortal && readMore == -1 && (
             <div className="space-y-4 absolute top-0 left-0 w-full h-full flex items-center justify-center">
-              <div className="space-y-2 max-w-md w-full  border border-white p-4">
+              <div className="space-y-2 max-w-md w-full  p-4">
                 <h2 className="text-2xl text-center  text-black font-semibold">
                   Admin Portal - Add New Article
                 </h2>
                 <div className="space-y-2 w-full">
-                  <Label htmlFor="admin-date" className="text-black">
+                  <Label htmlFor="admin-date" className="text-black ">
                     Date
                   </Label>
                   <Input
@@ -495,7 +432,7 @@ export default function Component() {
                     onChange={handleDateChange}
                     required
                     type="date"
-                    className="text-black"
+                    className="text-black rounded-md shadow-md"
                     style={{
                       background: "linear-gradient(-135deg, #F9EFAF, #F7A73E)",
                     }}
@@ -510,7 +447,7 @@ export default function Component() {
                     value={adminArticle.heading}
                     onChange={handleHeadingChange}
                     placeholder="Enter the heading"
-                    className="text-black"
+                    className="text-black rounded-md shadow-md"
                     style={{
                       background: "linear-gradient(-135deg, #F9EFAF, #F7A73E)",
                     }}
@@ -524,28 +461,14 @@ export default function Component() {
                     id="admin-publisher"
                     value={adminArticle.publisher}
                     onChange={handlePublisherChange}
-                    placeholder="Enter the publisher"
+                    placeholder="Enter the publisher "
                     style={{
                       background: "linear-gradient(-135deg, #F9EFAF, #F7A73E)",
                     }}
-                    className="text-black"
+                    className="text-black rounded-md shadow-md"
                   />
                 </div>
-                <div className="space-y-2">
-                  <Label htmlFor="admin-article-id" className="text-black">
-                    Article ID
-                  </Label>
-                  <Input
-                    id="admin-article-id"
-                    value={adminArticle.articleId}
-                    onChange={handleArticleIdChange}
-                    placeholder="Enter the article ID"
-                    style={{
-                      background: "linear-gradient(-135deg, #F9EFAF, #F7A73E)",
-                    }}
-                    className="text-black"
-                  />
-                </div>
+
                 <div className="space-y-2">
                   <Label htmlFor="category" className="text-black">
                     Category
@@ -554,7 +477,7 @@ export default function Component() {
                     id="category"
                     onChange={handleCategoryChange}
                     value={adminArticle.category}
-                    className="text-black ml-2"
+                    className="text-black ml-2 rounded-md shadow-md"
                     style={{
                       background: "linear-gradient(135deg, #ECD06F, #ffa500)",
                     }}
@@ -599,7 +522,7 @@ export default function Component() {
                         background:
                           "linear-gradient(-135deg, #F9EFAF, #F7A73E)",
                       }}
-                      className="text-black"
+                      className="text-black rounded-md shadow-md"
                     />
                     <Button
                       onClick={handleAddNewCategory}
