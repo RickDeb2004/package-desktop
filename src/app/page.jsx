@@ -214,25 +214,27 @@ export default function Component() {
           className=" relative flex flex-col h-auto min-h-screen items-center  gap-6 px-6 xl:gap-0 border border-yellow-500"
           style={{ background: "linear-gradient(135deg, #ECD06F, #fff3e0)" }}
         >
-          <div className="relative top-0 left-[35rem] mt-4 mr-4 flex gap-4">
-            <Button
-              onClick={handleLogout}
-              className="text-black font-mono font-semibold"
-              style={{
-                background: "linear-gradient(135deg, #ECD06F, #ffa500)",
-              }}
-            >
-              Logout
-            </Button>
-            <Button
-              onClick={handleClickAdd}
-              className="w-auto text-black font-mono font-semibold"
-              style={{
-                background: "linear-gradient(135deg, #ECD06F, #ffa500)",
-              }}
-            >
-              Add Article
-            </Button>
+          <div className="flex w-full justify-end">
+            <div className="m-4 flex gap-4">
+              <Button
+                onClick={handleLogout}
+                className="text-black font-mono font-semibold"
+                style={{
+                  background: "linear-gradient(135deg, #ECD06F, #ffa500)",
+                }}
+              >
+                <div className="p-6">Logout</div>
+              </Button>
+              <Button
+                onClick={handleClickAdd}
+                className="w-auto text-black font-mono font-semibold"
+                style={{
+                  background: "linear-gradient(135deg, #ECD06F, #ffa500)",
+                }}
+              >
+                <div className="p-4">Add Article</div>
+              </Button>
+            </div>
           </div>
           {!showAdminPortal && readMore == -1 && (
             <div className="text-center lg:relative lg:top-0 lg:w-full lg:mt-[-32px] mb-9">
