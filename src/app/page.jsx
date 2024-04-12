@@ -59,6 +59,7 @@ export default function Component() {
   const [pageresults, setPageResults] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const articlesPerPage = 3;
+
   useEffect(() => {
     const startIndex = (currentPage - 1) * articlesPerPage;
     const endIndex = Math.min(
@@ -66,7 +67,9 @@ export default function Component() {
       searchResults.length
     );
     setPageResults(searchResults.slice(startIndex, endIndex));
+    console.log("currentPage : ", currentPage);
   }, [currentPage, searchResults]);
+
   const totalPages = Math.ceil(searchResults.length / articlesPerPage);
   const handlePageChange = (pageNumber) => {
     setCurrentPage(pageNumber);
@@ -350,7 +353,7 @@ export default function Component() {
             <div className="relative px-36 my-10 min-w-full">
               {searchResults.length > 0 && (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                  {searchResults.map((article, index) => (
+                  {pageresults.map((article, index) => (
                     <div
                       key={index}
                       className="border border-yellow-400 rounded p-4 w-80 shadow-xl"
@@ -409,7 +412,9 @@ export default function Component() {
                 ).map((pageNumber) => (
                   <button
                     key={pageNumber}
-                    onClick={handlePageChange}
+                    onClick={() => {
+                      handlePageChange(pageNumber);
+                    }}
                     className={`mx-2 px-3 py-1 rounded-full border text-black ${
                       pageNumber === currentPage
                         ? "bg-yellow-600"
