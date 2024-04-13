@@ -74,7 +74,10 @@ export default function Component() {
   const handlePageChange = (pageNumber) => {
     setCurrentPage(pageNumber);
   };
-
+  useEffect(() => {
+    // Call handleSearch when the component mounts to fetch search results
+    handleSearch();
+  }, []);
   const db = getDatabase(app);
 
   useEffect(() => {
