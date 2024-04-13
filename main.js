@@ -8,7 +8,7 @@ const createWindow = () => {
     width: 800,
     height: 600,
     webPreferences: {
-      nodeIntegration: false, // Change to false for security
+      nodeIntegration: false,
       contextIsolation: true,
       preload: path.join(__dirname, "preload.js"),
     },
@@ -17,11 +17,9 @@ const createWindow = () => {
   win.loadURL("https://package-desktop.vercel.app/");
 };
 
-// When the app is ready, create the window
 app.on("ready", () => {
   ipcMain.handle("ping", () => "pong");
   createWindow();
 
-  // Remove window from memory on close
   win.on("closed", () => (win = null));
 });

@@ -23,8 +23,7 @@ export const AuthProvider = ({ children }) => {
         return;
       }
 
-      // reset user info
-      // console.log('reset');
+      
       setIsLoading(false);
       setUser({});
       localStorage.clear();
@@ -37,7 +36,7 @@ export const AuthProvider = ({ children }) => {
   }, [auth]);
 
   return (
-    <AuthContext.Provider value={{ user, auth }}> {/* Include auth object in context */}
+    <AuthContext.Provider value={{ user, auth }}> 
         {!isLoading && children}
     </AuthContext.Provider>
   );

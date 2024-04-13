@@ -7,7 +7,7 @@ import NotFound from "./404";
 
 export default function Component({ onLoginSuccess }) {
   const [adminData, setAdminData] = useState({ email: "", password: "" });
-  const [loading, setLoading] = useState(false); // State variable to track loading state
+  const [loading, setLoading] = useState(false); 
   const [open, setOpen] = useState(false);
 
   const handleInputChange = (e) => {
@@ -19,13 +19,13 @@ export default function Component({ onLoginSuccess }) {
   };
 
   const handleLogin = async (e) => {
-    e.preventDefault(); // Prevent form submission
-    setLoading(true); // Set loading to true when login button is clicked
+    e.preventDefault(); 
+    setLoading(true); 
 
     getAdminData((data) => {
-      // Simulate delay for demonstration purpose (replace with actual database call)
+     
       setTimeout(() => {
-        setLoading(false); // Set loading to false after checking credentials
+        setLoading(false); 
         if (
           adminData.email === data.email &&
           adminData.password === data.password
@@ -34,7 +34,7 @@ export default function Component({ onLoginSuccess }) {
         } else {
           setOpen(true);
         }
-      }, 2000); // Simulated delay of 2 seconds
+      }, 2000); 
     });
   };
 
@@ -87,10 +87,10 @@ export default function Component({ onLoginSuccess }) {
             <Button
               type="submit"
               className="w-full bg-white font-mono font-semibold text-[#065f46] py-2 px-4 border border-transparent rounded-md shadow-sm text-sm  hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-400"
-              disabled={loading} // Disable button when loading is true
+              disabled={loading} 
               style={{background: 'linear-gradient(135deg, #ECD06F, #ffa500)'}}
             >
-              {loading ? "Loading..." : "Login"} {/* Show Loading text when loading is true */}
+              {loading ? "Loading..." : "Login"} 
             </Button>
           </div>
         </form>

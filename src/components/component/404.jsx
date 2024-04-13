@@ -1,19 +1,19 @@
-// create a popup component for 404 page invalid credentials with an ok button
-
-// Path: src/components/component/404.jsx
-
-// Create a new file named 404.jsx in the src/components/component folder and add the following code to it:
-
 import React from "react";
 import { Dialog } from "@headlessui/react";
 
 const NotFound = ({ open, onClose }) => {
   return (
-    <Dialog open={open} onClose={onClose} className="fixed z-10 inset-0 overflow-y-auto bg-black backdrop-blur-lg bg-opacity-50">
+    <Dialog
+      open={open}
+      onClose={onClose}
+      className="fixed z-10 inset-0 overflow-y-auto bg-black backdrop-blur-lg bg-opacity-50"
+    >
       <div className="flex  items-center justify-center min-h-screen">
         <Dialog.Panel className="relative bg-gradient-to-r from-[#ffa500] to-[#ECD06F] p-4 rounded-lg shadow-lg max-w-md w-full">
           <Dialog.Title className="text-lg font-bold text-gray-900">
-            <span className="ml-2 font-bold font-sans text-2xl">BAD CREDENTIALS !</span>
+            <span className="ml-2 font-bold font-sans text-2xl">
+              BAD CREDENTIALS !
+            </span>
           </Dialog.Title>
           <Dialog.Description className="text-sm text-gray-800 font-semibold m-2">
             Invalid email or password. Please try again.
@@ -30,6 +30,6 @@ const NotFound = ({ open, onClose }) => {
       </div>
     </Dialog>
   );
-}
+};
 
 export default NotFound;

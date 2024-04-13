@@ -6,7 +6,7 @@ const db = getDatabase(app);
 export const getArticles = (callback) => {
   onValue(ref(db, "articles"), (snapshot) => {
     const data = snapshot.val();
-    // console.log(data)
+   
     callback(data);
   });
 };

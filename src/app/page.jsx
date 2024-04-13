@@ -39,12 +39,6 @@ export default function Component() {
 
   const [searchResults, setSearchResults] = useState([]);
 
-  // const [categoryOptions, setCategoryOptions] = useState([
-  //   "World News",
-  //   "Accident",
-  //   "Love",
-  // ]);
-
   const [categoryOptions, setCategoryOptions] = useState([]);
   useEffect(() => {
     getCategories((data) => {
@@ -74,7 +68,6 @@ export default function Component() {
     setCurrentPage(pageNumber);
   };
   useEffect(() => {
-    // Call handleSearch when the component mounts to fetch search results
     handleSearch();
   }, []);
   const db = getDatabase(app);
@@ -96,7 +89,6 @@ export default function Component() {
       );
     }
 
-    // Execute the first query
     const snapshot = await get(filteredQuery);
 
     const articles = [];
@@ -117,7 +109,6 @@ export default function Component() {
       }
     });
 
-    // Update search results
     setSearchResults(articles);
     setCurrentPage(1);
   };
@@ -147,7 +138,7 @@ export default function Component() {
     setShowAdminPortal(true);
   };
   const handleBackButtonClick = () => {
-    setShowAdminPortal(false); // Reset to initial state
+    setShowAdminPortal(false);
   };
   const handleDateChange = (e) => {
     const value = e.target.value;
@@ -208,7 +199,6 @@ export default function Component() {
         childData.articleId === article.articleId &&
         childData.category === article.category
       ) {
-        // realtime database
         remove(ref(db, `articles/${childSnapshot.key}`));
         handleSearch();
       }
@@ -339,7 +329,6 @@ export default function Component() {
             </div>
           )}
 
-          {/* Display selected News Page */}
           {readMore == -1 && (
             <div className="relative px-36 my-10 min-w-full">
               {searchResults.length > 0 && (
@@ -349,11 +338,6 @@ export default function Component() {
                       key={index}
                       className="border border-yellow-400 rounded p-4 w-80 shadow-xl"
                     >
-                      {/* <img
-                    alt="News Image"
-                    src="https://sp.yimg.com/ib/th?&id=ODL.c450481298ead71f45bf4bdd14bda34a&w=200&h=107&c=4&dpr=2&rs=1"
-                    className="w-full h-auto rounded"
-                       /> */}
                       <div className="mt-4">
                         <div className="flex justify-between">
                           <span className="text-xs font-semibold text-gray-700">
@@ -367,7 +351,6 @@ export default function Component() {
                           {article.heading}
                         </h1>
                         <p className="text-sm text-gray-700 mt-2">
-                          {/* only take the first hundred characters of the description, if descriptioon is more than 100 words */}
                           {article.description?.length > 150
                             ? article.description?.substring(0, 150) + "..."
                             : article.description}
@@ -551,7 +534,6 @@ export default function Component() {
             </div>
           )}
 
-          {/* Display Read More  */}
           {readMore != -1 && (
             <div className="relative px-36 my-10 min-w-full">
               <News article={searchResults[readMore]} />
