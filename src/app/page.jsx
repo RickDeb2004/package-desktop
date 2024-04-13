@@ -55,7 +55,28 @@ export default function Component() {
   }, []);
 
   const [newCategory, setNewCategory] = useState("");
+  const [pageresults, setPageResults] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const articlesPerPage = 3;
 
+  useEffect(() => {
+    const startIndex = (currentPage - 1) * articlesPerPage;
+    const endIndex = Math.min(
+      startIndex + articlesPerPage,
+      searchResults.length
+    );
+    setPageResults(searchResults.slice(startIndex, endIndex));
+    console.log("currentPage : ", currentPage);
+  }, [currentPage, searchResults]);
+
+  const totalPages = Math.ceil(searchResults.length / articlesPerPage);
+  const handlePageChange = (pageNumber) => {
+    setCurrentPage(pageNumber);
+  };
+  useEffect(() => {
+    // Call handleSearch when the component mounts to fetch search results
+    handleSearch();
+  }, []);
   const db = getDatabase(app);
 
   useEffect(() => {
@@ -98,6 +119,7 @@ export default function Component() {
 
     // Update search results
     setSearchResults(articles);
+    setCurrentPage(1);
   };
 
   const handleInputChange = (e) => {
@@ -140,10 +162,6 @@ export default function Component() {
       ...prev,
       description: value,
     }));
-  };
-
-  const handleLogoutClick = async () => {
-    setLoginPage(false);
   };
 
   const handleLoginSuccess = () => {
@@ -326,7 +344,7 @@ export default function Component() {
             <div className="relative px-36 my-10 min-w-full">
               {searchResults.length > 0 && (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                  {searchResults.map((article, index) => (
+                  {pageresults.map((article, index) => (
                     <div
                       key={index}
                       className="border border-yellow-400 rounded p-4 w-80 shadow-xl"
@@ -379,8 +397,29 @@ export default function Component() {
                   ))}
                 </div>
               )}
+              <div className="flex justify-center mt-4">
+                {Array.from(
+                  { length: totalPages },
+                  (_, index) => index + 1
+                ).map((pageNumber) => (
+                  <button
+                    key={pageNumber}
+                    onClick={() => {
+                      handlePageChange(pageNumber);
+                    }}
+                    className={`mx-2 px-3 py-1 rounded-full border text-black ${
+                      pageNumber === currentPage
+                        ? "bg-yellow-600"
+                        : "bg-yellow-600"
+                    }`}
+                  >
+                    {pageNumber}
+                  </button>
+                ))}
+              </div>
             </div>
           )}
+
           {showAdminPortal && readMore == -1 && (
             <div className="space-y-4 absolute top-0 left-0 w-full h-full flex items-center justify-center">
               <div className="space-y-2 max-w-md w-full  p-4">
