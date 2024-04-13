@@ -392,8 +392,8 @@ export default function Component() {
                     }}
                     className={`mx-2 px-3 py-1 rounded-full border text-black ${
                       pageNumber === currentPage
-                        ? "bg-yellow-600"
-                        : "bg-orange-400"
+                        ? "bg-yellow-500"
+                        : "bg-amber-300"
                     }`}
                   >
                     {pageNumber}
@@ -404,7 +404,7 @@ export default function Component() {
           )}
 
           {showAdminPortal && readMore == -1 && (
-            <div className="space-y-4 absolute top-0 left-0 w-full h-full flex items-center justify-center">
+            <div className="space-y-4 relative mt-[-6rem] top-0 left-0 w-full h-full flex items-center justify-center">
               <div className="space-y-2 max-w-md w-full  p-4">
                 <h2 className="text-2xl text-center  text-black font-semibold">
                   Admin Portal - Add New Article
@@ -452,7 +452,7 @@ export default function Component() {
                     style={{
                       background: "linear-gradient(-135deg, #F9EFAF, #F7A73E)",
                     }}
-                    className="text-black rounded-md shadow-md placeholder:black p-2 h-32 w-full"
+                    className="text-black rounded-md shadow-md placeholder:text-gray-800 p-2 h-32 w-full"
                   />
                 </div>
 
