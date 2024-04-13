@@ -393,7 +393,7 @@ export default function Component() {
                     className={`mx-2 px-3 py-1 rounded-full border text-black ${
                       pageNumber === currentPage
                         ? "bg-yellow-600"
-                        : "bg-yellow-600"
+                        : "bg-orange-400"
                     }`}
                   >
                     {pageNumber}
