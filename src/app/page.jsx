@@ -51,7 +51,7 @@ export default function Component() {
   const [newCategory, setNewCategory] = useState("");
   const [pageresults, setPageResults] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const articlesPerPage = 3;
+  const articlesPerPage = 12;
 
   useEffect(() => {
     const startIndex = (currentPage - 1) * articlesPerPage;
@@ -132,13 +132,24 @@ export default function Component() {
 
   const handleAddArticleClick = () => {
     const database = getDatabase(app);
+    setShowAdminPortal(false);
+    setTimeout(() => {
+      handleSearch();
+    }, 100);
     push(ref(database, "articles"), adminArticle);
+    setAdminArticle({
+      date: "",
+      heading: "",
+      description: "",
+      category: "",
+    });
   };
   const handleClickAdd = () => {
     setShowAdminPortal(true);
   };
   const handleBackButtonClick = () => {
     setShowAdminPortal(false);
+    handleSearch();
   };
   const handleDateChange = (e) => {
     const value = e.target.value;

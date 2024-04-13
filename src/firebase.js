@@ -1,15 +1,15 @@
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
 
-export const firebaseConfig = {
-  apiKey: "AIzaSyCJySLuAsl9Kb1Uk-cHa8EaH4pE4ueoaBo",
-  authDomain: "package-dekstop.firebaseapp.com",
-  databaseURL: "https://package-dekstop-default-rtdb.firebaseio.com",
-  projectId: "package-dekstop",
-  storageBucket: "package-dekstop.appspot.com",
-  messagingSenderId: "313409620631",
-  appId: "1:313409620631:web:dc32e6863aefe64c20b7d2",
-  measurementId: "G-SFS57HKY7V",
+const firebaseConfig = {
+  apiKey: "AIzaSyC8Z8HgLM4p1hpTINH6uz9Gqd3iwfIM4OA",
+  authDomain: "news-admin-63600.firebaseapp.com",
+  databaseURL: "https://news-admin-63600-default-rtdb.firebaseio.com",
+  projectId: "news-admin-63600",
+  storageBucket: "news-admin-63600.appspot.com",
+  messagingSenderId: "776715761993",
+  appId: "1:776715761993:web:bd94d5a1a1142f9b674298",
+  measurementId: "G-0TRGRV78QV"
 };
 
 export const app = initializeApp(firebaseConfig);
