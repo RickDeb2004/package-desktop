@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useContext, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -16,7 +16,7 @@ import {
 } from "firebase/database";
 import News from "@/components/component/News";
 import Login from "@/components/component/Login";
-import { addCategory, getCategories } from "@/helper/controller";
+import { getArticleCategories } from "@/helper/controller";
 
 export default function Component() {
   const [showAdminPortal, setShowAdminPortal] = useState(false);
@@ -41,11 +41,16 @@ export default function Component() {
 
   const [categoryOptions, setCategoryOptions] = useState([]);
   useEffect(() => {
-    getCategories((data) => {
+    getArticleCategories((data) => {
       if (data) {
-        setCategoryOptions(Object.values(data));
+        setCategoryOptions(data);
       }
     });
+    // getCategories((data) => {
+    //   if (data) {
+    //     setCategoryOptions(Object.values(data));
+    //   }
+    // });
   }, []);
 
   const [newCategory, setNewCategory] = useState("");
@@ -60,7 +65,7 @@ export default function Component() {
       searchResults.length
     );
     setPageResults(searchResults.slice(startIndex, endIndex));
-    console.log("currentPage : ", currentPage);
+    // console.log("currentPage : ", currentPage);
   }, [currentPage, searchResults]);
 
   const totalPages = Math.ceil(searchResults.length / articlesPerPage);
@@ -130,19 +135,31 @@ export default function Component() {
     }));
   };
 
+  const handleAddNewCategory = () => {
+    if (newCategory.trim() !== "") {
+      adminArticle.category = newCategory;
+      setNewCategory("");
+    }
+  };
+
   const handleAddArticleClick = () => {
-    const database = getDatabase(app);
-    setShowAdminPortal(false);
-    setTimeout(() => {
-      handleSearch();
-    }, 100);
-    push(ref(database, "articles"), adminArticle);
-    setAdminArticle({
-      date: "",
-      heading: "",
-      description: "",
-      category: "",
-    });
+    handleAddNewCategory();
+    try {
+      const database = getDatabase(app);
+      setShowAdminPortal(false);
+      setTimeout(() => {
+        handleSearch();
+      }, 100);
+      push(ref(database, "articles"), adminArticle);
+      setAdminArticle({
+        date: "",
+        heading: "",
+        description: "",
+        category: "",
+      });
+    } catch {
+      console.log("Error");
+    }
   };
   const handleClickAdd = () => {
     setShowAdminPortal(true);
@@ -186,18 +203,6 @@ export default function Component() {
     setNewCategory(value);
   };
 
-  const handleAddNewCategory = () => {
-    if (newCategory.trim() !== "") {
-      setAdminArticle((prev) => ({
-        ...prev,
-        category: newCategory,
-      }));
-      console.log(newCategory);
-      addCategory(newCategory);
-      setNewCategory("");
-    }
-  };
-
   const deleteNews = (article) => async () => {
     const articlesRef = ref(db, "articles");
     const snapshot = await get(articlesRef);
@@ -217,7 +222,7 @@ export default function Component() {
   };
 
   const handleReadMore = (index) => {
-    console.log(searchResults[index]);
+    // console.log(searchResults[index]);
     setReadMore(index);
   };
 
@@ -322,7 +327,7 @@ export default function Component() {
                       background: "linear-gradient(135deg, #ECD06F, #ffa500)",
                     }}
                   >
-                    Select category
+                    All Categories
                   </option>
                   {categoryOptions.map((category, index) => (
                     <option
@@ -512,7 +517,7 @@ export default function Component() {
                       }}
                       className="text-black rounded-md shadow-md"
                     />
-                    <Button
+                    {/* <Button
                       onClick={handleAddNewCategory}
                       className="ml-2 font-mono font-semibold"
                       style={{
@@ -520,7 +525,7 @@ export default function Component() {
                       }}
                     >
                       +
-                    </Button>
+                    </Button> */}
                   </div>
                 </div>
                 <Button

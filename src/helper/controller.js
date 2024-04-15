@@ -18,13 +18,23 @@ export const getAdminData = (callback) => {
   });
 }
 
-export const addCategory = (category) => {
-  push(ref(db, "categories"), category);
-};
+// export const addCategory = (category) => {
+//   push(ref(db, "categories"), category);
+// };
 
-export const getCategories = (callback) => {
-  onValue(ref(db, "categories"), (snapshot) => {
+// export const getCategories = (callback) => {
+//   onValue(ref(db, "categories"), (snapshot) => {
+//     const data = snapshot.val();
+//     callback(data);
+//   });
+// };
+
+export const getArticleCategories = (callback) => {
+  onValue(ref(db, "articles"), (snapshot) => {
     const data = snapshot.val();
-    callback(data);
+    const categories = Object.values(data).map((article) => article.category);
+    // Remove duplicates
+    const uniqueCategories = [...new Set(categories)]
+    callback(uniqueCategories);
   });
-};
+}
