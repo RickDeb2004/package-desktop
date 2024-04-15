@@ -231,7 +231,7 @@ export default function Component() {
   };
   return (
     <>
-      {false ? (
+      {loginPage ? (
         <Login onLoginSuccess={handleLoginSuccess} />
       ) : (
         <div
