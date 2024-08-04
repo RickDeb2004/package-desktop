@@ -56,7 +56,7 @@ export default function Component({ onLoginSuccess }) {
                 value={adminData.email}
                 onChange={handleInputChange}
                 className="block w-full pl-10 pr-3 py-2 rounded-md leading-5 bg-[#064e3b] text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-orange-300 focus:border-orange-300 sm:text-sm"
-                placeholder="admin@example.com"
+                placeholder="admin@gmail.com"
                 type="email"
               />
               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -74,7 +74,7 @@ export default function Component({ onLoginSuccess }) {
                 value={adminData.password}
                 onChange={handleInputChange}
                 className="block w-full pl-10 pr-3 py-2 rounded-md leading-5 bg-[#064e3b] text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-orange-300 focus:border-orange-300 sm:text-sm"
-                placeholder="••••••••"
+                placeholder="admin@1234"
                 type="password"
               />
               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
